@@ -606,6 +606,26 @@
       "idea": "El género se actúa; no es una esencia previa.",
       "blurb": "Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.",
       "work": "El género en disputa"
+    },
+    {
+      "name": "Yasuo Deguchi",
+      "birth": 1962,
+      "death": null,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "El sujeto de una acción no es el individuo aislado, sino un 'nosotros'.",
+      "blurb": "Filósofo japonés que combina la lógica budista (el tetralema de Nagarjuna) con la lógica y la filosofía del lenguaje occidentales. Propone el 'giro del nosotros' (we-turn): la responsabilidad de una acción —incluidas las de robots e inteligencias artificiales— no recae en un individuo, sino en un colectivo que las co-constituye.",
+      "work": "The Moon Points Back (con Jay L. Garfield y Graham Priest)"
+    },
+    {
+      "name": "Kohei Saito",
+      "birth": 1987,
+      "death": null,
+      "school": "contemporary",
+      "tier": "major",
+      "idea": "El decrecimiento, no el crecimiento verde, puede salvar el planeta.",
+      "blurb": "Rescató cuadernos tardíos e inéditos de Marx sobre ecología para argumentar que el capitalismo es estructuralmente incompatible con frenar el cambio climático. Propone el 'decrecimiento comunista': reducir la producción y organizar lo esencial —transporte, salud, educación— como bienes comunes gratuitos en vez de mercancías.",
+      "work": "El capital en el Antropoceno"
     }
   ]
 }
