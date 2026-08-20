@@ -108,10 +108,11 @@
   }
   .chips{
     display:flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.4rem;
-    flex: 1 1 420px;
+    margin-top: 1.1rem;
   }
+  .chip{ width: 100%; justify-content: flex-start; }
   .chip{
     font-family: var(--font-mono);
     font-size: 0.68rem;
@@ -214,14 +215,16 @@
     font-size: 0.68rem;
     font-weight: 600;
     color: var(--parchment);
-    opacity: 0.92;
+    opacity: 0;
     white-space: nowrap;
     pointer-events: none;
     background: rgba(15,13,11,0.72);
     border: 1px solid var(--line-strong);
     padding: 0.1rem 0.35rem;
     border-radius: 4px;
+    transition: opacity .25s ease;
   }
+  .tick-mark{ opacity: 0; transition: opacity .25s ease; }
 
   /* zoom controls */
   .zoomctl{
@@ -310,9 +313,9 @@
   .scrim.open{ opacity: 1; pointer-events: auto; }
 
   /* flowing current along each ribbon's bright core line */
-  .ribbon-core{
-    stroke-dasharray: 7 14;
-    animation: flowCurrent 2.6s linear infinite;
+  .ribbon-flow{
+    stroke-dasharray: 3 34;
+    animation: flowCurrent 3.4s linear infinite;
   }
   @keyframes flowCurrent{ to { stroke-dashoffset: -210; } }
 
@@ -336,6 +339,51 @@
   }
   .tour-btn:hover{ filter: brightness(1.08); }
   .tour-btn:focus-visible{ outline: 2px solid var(--parchment); outline-offset: 2px; }
+
+  .filters-btn{
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--parchment);
+    background: var(--bg-alt);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.42rem 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: none;
+  }
+  .filters-btn .count{
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 999px;
+    font-size: 0.62rem;
+    padding: 0.05rem 0.4rem;
+  }
+  .filters-btn:hover{ border-color: var(--parchment-dim); }
+  .filters-btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .filters-drawer{
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: min(300px, 84vw);
+    background: var(--bg-raise);
+    border-right: 1px solid var(--line-strong);
+    box-shadow: 24px 0 48px rgba(0,0,0,0.45);
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.2,.8,.2,1);
+    overflow-y: auto;
+    padding: 1.5rem 1.3rem 2rem;
+  }
+  .filters-drawer.open{ transform: translateX(0); }
+  .filters-top{ display:flex; justify-content: space-between; align-items: center; }
+  .filters-top span{
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--parchment-dim);
+  }
 
   .tour-indicator{
     position: absolute;
@@ -369,7 +417,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .panel, .node .marker, .chip{ transition: none !important; }
-    .ribbon-core{ animation: none; }
+    .ribbon-flow{ animation: none; }
     .spiral-world.touring{ transition: none; }
   }
 
@@ -390,12 +438,22 @@
   </header>
 
   <div class="controls">
-    <div class="chips" id="chips" role="group" aria-label="Filtrar por escuela de pensamiento"></div>
+    <button type="button" class="filters-btn" id="filtersBtn" aria-haspopup="true" aria-expanded="false">
+      ☰ Escuelas <span class="count" id="filtersCount">11</span>
+    </button>
     <button type="button" class="tour-btn" id="tourBtn">▶ Tour guiado</button>
     <div class="search-wrap">
       <input type="search" id="search" placeholder="Buscar un filósofo…" aria-label="Buscar un filósofo por nombre">
     </div>
   </div>
+
+  <aside class="filters-drawer" id="filtersDrawer" aria-hidden="true">
+    <div class="filters-top">
+      <span>Escuelas de pensamiento</span>
+      <button class="panel-close" id="filtersClose" aria-label="Cerrar filtros">✕</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filtrar por escuela de pensamiento"></div>
+  </aside>
 
   <div class="spiral-shell" id="shell">
     <span class="hint">Arrastrá para mover · pellizcá o usá la rueda para zoom</span>
@@ -661,7 +719,9 @@
     world.appendChild(tag);
   });
 
-  /* century ticks: pushed outward (away from center) so they clear the ribbons */
+  /* century ticks: pushed outward (away from center) so they clear the ribbons.
+     Kept dim/hidden until the user zooms in a bit, to avoid clutter on first load. */
+  var tickEls = [];
   for (var ty = -600; ty <= 2000; ty += 100){
     var ang = angleFor(ty);
     var r = baseRadiusFor(ty);
@@ -673,7 +733,7 @@
     tickMark.setAttribute("x2", cx + ptOut.x); tickMark.setAttribute("y2", cy + ptOut.y);
     tickMark.setAttribute("stroke", "var(--parchment-dim)");
     tickMark.setAttribute("stroke-width", "1");
-    tickMark.style.opacity = "0.4";
+    tickMark.setAttribute("class", "tick-mark");
     svg.appendChild(tickMark);
 
     var lbl = document.createElement("div");
@@ -683,6 +743,8 @@
     lbl.style.top = (cy + ptOut.y) + "px";
     lbl.style.transform = "translate(-50%,-50%)";
     world.appendChild(lbl);
+
+    tickEls.push({ mark: tickMark, label: lbl });
   }
 
   /* school ribbons: thick translucent stroke + thin bright core, following the spiral */
@@ -700,34 +762,43 @@
     outline.setAttribute("d", d);
     outline.setAttribute("fill", "none");
     outline.setAttribute("stroke", "#000000");
-    outline.setAttribute("stroke-width", "19");
+    outline.setAttribute("stroke-width", "20");
     outline.setAttribute("stroke-linecap", "round");
     outline.setAttribute("stroke-linejoin", "round");
-    outline.style.opacity = "0.35";
+    outline.style.opacity = "0.4";
     svg.appendChild(outline);
 
     var wide = document.createElementNS(svgNS, "path");
     wide.setAttribute("d", d);
     wide.setAttribute("fill", "none");
     wide.setAttribute("stroke", s.color);
-    wide.setAttribute("stroke-width", "13");
+    wide.setAttribute("stroke-width", "15");
     wide.setAttribute("stroke-linecap", "round");
     wide.setAttribute("stroke-linejoin", "round");
-    wide.style.opacity = "0.42";
+    wide.style.opacity = "0.58";
     svg.appendChild(wide);
 
     var core = document.createElementNS(svgNS, "path");
     core.setAttribute("d", d);
     core.setAttribute("fill", "none");
     core.setAttribute("stroke", s.color);
-    core.setAttribute("stroke-width", "2.5");
+    core.setAttribute("stroke-width", "3");
     core.setAttribute("stroke-linecap", "round");
     core.style.opacity = "1";
-    core.setAttribute("class", "ribbon-core");
-    core.style.animationDelay = (sIdx * -0.35) + "s";
     svg.appendChild(core);
 
-    ribbonEls[s.key] = [wide, core, outline];
+    var flow = document.createElementNS(svgNS, "path");
+    flow.setAttribute("d", d);
+    flow.setAttribute("fill", "none");
+    flow.setAttribute("stroke", "var(--parchment)");
+    flow.setAttribute("stroke-width", "3.2");
+    flow.setAttribute("stroke-linecap", "round");
+    flow.setAttribute("class", "ribbon-flow");
+    flow.style.opacity = "0.85";
+    flow.style.animationDelay = (sIdx * -0.4) + "s";
+    svg.appendChild(flow);
+
+    ribbonEls[s.key] = [wide, core, outline, flow];
 
     /* school label near the start of its ribbon */
     var startPt = polarToXY(angleFor(range.from), radiusFor(range.from, s.key));
@@ -803,16 +874,39 @@
   /* ===================== CHIPS / FILTER ===================== */
 
   var chipsWrap = document.getElementById("chips");
+  var filtersCount = document.getElementById("filtersCount");
+  var filtersDrawer = document.getElementById("filtersDrawer");
+  var filtersBtn = document.getElementById("filtersBtn");
+  var filtersClose = document.getElementById("filtersClose");
+
+  function openFilters(){
+    filtersDrawer.classList.add("open");
+    filtersDrawer.setAttribute("aria-hidden", "false");
+    filtersBtn.setAttribute("aria-expanded", "true");
+    scrim.classList.add("open");
+    closePanel();
+  }
+  function closeFilters(){
+    filtersDrawer.classList.remove("open");
+    filtersDrawer.setAttribute("aria-hidden", "true");
+    filtersBtn.setAttribute("aria-expanded", "false");
+    if (!panel.classList.contains("open")) scrim.classList.remove("open");
+  }
+  filtersBtn.addEventListener("click", function(){
+    filtersDrawer.classList.contains("open") ? closeFilters() : openFilters();
+  });
+  filtersClose.addEventListener("click", closeFilters);
   var activeSchools = new Set(SCHOOLS.map(function(s){ return s.key; }));
 
   function applyFilter(){
     var allActive = activeSchools.size === SCHOOLS.length;
     SCHOOLS.forEach(function(s){
       var on = activeSchools.has(s.key);
-      var op = allActive ? [0.42, 1, 0.35] : (on ? [0.6, 1, 0.45] : [0.03, 0.05, 0.02]);
+      var op = allActive ? [0.58, 1, 0.4, 0.85] : (on ? [0.75, 1, 0.5, 1] : [0.03, 0.05, 0.02, 0]);
       ribbonEls[s.key][0].style.opacity = op[0];
       ribbonEls[s.key][1].style.opacity = op[1];
       ribbonEls[s.key][2].style.opacity = op[2];
+      ribbonEls[s.key][3].style.opacity = op[3];
     });
     nodeEls.forEach(function(n){
       var on = activeSchools.has(n.school);
@@ -821,6 +915,7 @@
     chipsWrap.querySelectorAll(".chip").forEach(function(c){
       c.setAttribute("aria-pressed", activeSchools.has(c.dataset.key) && !allActive ? "true" : "false");
     });
+    filtersCount.textContent = allActive ? String(SCHOOLS.length) : String(activeSchools.size);
   }
 
   SCHOOLS.forEach(function(s){
@@ -884,6 +979,7 @@
   var selectedEl = null;
 
   function openPanel(p, school){
+    closeFilters();
     panelSeal.textContent = p.name.charAt(0);
     panelSeal.style.setProperty("--seal-color", school.color);
     panelName.textContent = p.name;
@@ -908,7 +1004,7 @@
     if (selectedEl){ selectedEl.classList.remove("selected"); selectedEl = null; }
   }
   panelClose.addEventListener("click", closePanel);
-  scrim.addEventListener("click", closePanel);
+  scrim.addEventListener("click", function(){ closePanel(); closeFilters(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") closePanel(); });
 
   /* ===================== PAN & ZOOM ===================== */
@@ -919,6 +1015,18 @@
 
   function applyTransform(){
     world.style.transform = "translate(" + view.tx + "px," + view.ty + "px) scale(" + view.scale + ")";
+    updateLOD();
+  }
+
+  var lodShown = null;
+  function updateLOD(){
+    var show = view.scale > 0.55;
+    if (show === lodShown) return;
+    lodShown = show;
+    tickEls.forEach(function(t){
+      t.mark.style.opacity = show ? "0.4" : "0";
+      t.label.style.opacity = show ? "0.92" : "0";
+    });
   }
 
   function fitToView(){
