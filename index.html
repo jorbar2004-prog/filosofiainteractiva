@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>La corriente — Historia de la filosofía</title>
+<meta name="description" content="Línea de tiempo interactiva en espiral de las escuelas de pensamiento filosófico, de Pitágoras a nuestros días.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..800,0..100,0..1&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0f0d0b;
+    --bg-alt: #17130f;
+    --bg-raise: #1e1912;
+    --parchment: #ede3c8;
+    --parchment-dim: #cbbd96;
+    --ink: #1c1710;
+    --gold: #c9a227;
+    --line: rgba(233,223,196,0.14);
+    --line-strong: rgba(233,223,196,0.28);
+
+    --c-presocratic: #7c9b5c;
+    --c-classical: #bd4a3a;
+    --c-hellenistic: #2f83a0;
+    --c-medieval: #8a6a3c;
+    --c-rationalism: #7758a0;
+    --c-enlightenment: #cf9a2e;
+    --c-critique: #2f8a76;
+    --c-existential: #a3466e;
+    --c-analytic: #5568b8;
+    --c-contemporary: #cf6a34;
+    --c-science: #7d8fa3;
+
+    --font-display: "Fraunces", "Source Serif 4", serif;
+    --font-body: "Source Serif 4", Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--parchment);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+  ::selection{ background: var(--gold); color: var(--ink); }
+
+  .page{
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header.hero{
+    padding: 1.7rem 1.75rem 1rem;
+    flex: none;
+  }
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 0.6rem;
+    display:flex;
+    align-items:center;
+    gap: 0.6rem;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 2.1rem;
+    height: 1px;
+    background: var(--gold);
+    display:inline-block;
+  }
+  h1{
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-variation-settings: "SOFT" 0, "WONK" 1;
+    font-size: clamp(1.5rem, 3.6vw, 2.3rem);
+    line-height: 1.05;
+    margin: 0 0 0.35rem;
+    color: var(--parchment);
+  }
+  h1 em{ font-style: italic; font-weight: 500; color: var(--gold); }
+  .hero p{
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--parchment-dim);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .controls{
+    padding: 0 1.75rem 0.9rem;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    flex: none;
+  }
+  .chips{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    flex: 1 1 420px;
+  }
+  .chip{
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--parchment-dim);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .chip .dot{ width: 7px; height: 7px; border-radius: 50%; background: var(--dot-color, var(--gold)); flex: none; }
+  .chip[aria-pressed="true"]{ color: var(--ink); background: var(--parchment); border-color: var(--parchment); }
+  .chip:hover{ border-color: var(--parchment-dim); color: var(--parchment); }
+  .chip:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .search-wrap{ flex: 0 1 220px; }
+  .search-wrap input{
+    width: 100%;
+    background: var(--bg-alt);
+    border: 1px solid var(--line-strong);
+    color: var(--parchment);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+  }
+  .search-wrap input::placeholder{ color: var(--parchment-dim); opacity:0.7; }
+  .search-wrap input:focus-visible{ outline: 2px solid var(--gold); outline-offset: 1px; }
+
+  /* ---------- spiral viewport ---------- */
+  .spiral-shell{
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    touch-action: none;
+    background: radial-gradient(ellipse at 50% 45%, rgba(201,162,39,0.05), transparent 60%), var(--bg);
+    cursor: grab;
+  }
+  .spiral-shell.dragging{ cursor: grabbing; }
+  .spiral-world{
+    position: absolute;
+    top: 0; left: 0;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  .node{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: none; border: none; padding: 0;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+    transition: opacity .25s ease;
+  }
+  .node .marker{
+    width: var(--r, 13px); height: var(--r, 13px);
+    border-radius: 50%;
+    background: var(--node-color, var(--gold));
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--node-color, var(--gold));
+    transition: transform .15s ease;
+  }
+  .node:hover .marker, .node:focus-visible .marker{ transform: scale(1.4); }
+  .node .label{
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--parchment-dim);
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 0 6px var(--bg), 0 0 6px var(--bg), 0 0 6px var(--bg);
+  }
+  .node.minor .label{ opacity: 0; transition: opacity .15s ease; }
+  .node.minor:hover .label, .node.minor:focus-visible .label, .node.minor.show-label .label{ opacity: 1; }
+  .node.major .label{ color: var(--parchment); }
+  .node:focus-visible{ outline: none; }
+  .node:focus-visible .marker{ outline: 2px solid var(--gold); outline-offset: 3px; }
+  .node.dim{ opacity: 0.1; pointer-events: none; }
+  .node.selected .marker{ transform: scale(1.55); }
+
+  .era-tag{
+    position:absolute;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--parchment-dim);
+    opacity: 0.55;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .tick-label{
+    position:absolute;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--parchment);
+    opacity: 0.92;
+    white-space: nowrap;
+    pointer-events: none;
+    background: rgba(15,13,11,0.72);
+    border: 1px solid var(--line-strong);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+
+  /* zoom controls */
+  .zoomctl{
+    position: absolute;
+    right: 1rem; bottom: 1rem;
+    z-index: 5;
+    display: flex; flex-direction: column;
+    gap: 0.35rem;
+  }
+  .zoomctl button{
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg-raise);
+    border: 1px solid var(--line-strong);
+    color: var(--parchment);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .zoomctl button:hover{ border-color: var(--gold); color: var(--gold); }
+  .zoomctl button:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .hint{
+    position: absolute;
+    left: 1.1rem; top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--parchment-dim);
+    opacity: 0.55;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* ---------- detail panel ---------- */
+  .panel{
+    position: fixed;
+    z-index: 40;
+    background: var(--bg-raise);
+    border-left: 1px solid var(--line-strong);
+    box-shadow: -24px 0 48px rgba(0,0,0,0.45);
+    display: flex; flex-direction: column;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  @media (min-width: 760px){
+    .panel{ top: 0; right: 0; bottom: 0; width: min(400px, 92vw); transform: translateX(100%); }
+    .panel.open{ transform: translateX(0); }
+  }
+  @media (max-width: 759px){
+    .panel{
+      left: 0; right: 0; bottom: 0; max-height: 72vh;
+      border-left: none; border-top: 1px solid var(--line-strong);
+      border-radius: 18px 18px 0 0;
+      transform: translateY(100%);
+    }
+    .panel.open{ transform: translateY(0); }
+  }
+  .panel-scroll{ overflow-y: auto; padding: 1.5rem 1.5rem 2.2rem; }
+  .panel-top{ display:flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .seal{
+    width: 52px; height: 52px; border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
+    background: var(--seal-color, var(--gold)); color: var(--ink);
+    flex: none; box-shadow: 0 0 0 4px rgba(237,227,200,0.06);
+  }
+  .panel-close{
+    background: none; border: 1px solid var(--line-strong); color: var(--parchment-dim);
+    border-radius: 50%; width: 30px; height: 30px; cursor: pointer;
+    font-family: var(--font-mono); font-size: 0.85rem; line-height: 1;
+  }
+  .panel-close:hover{ color: var(--parchment); border-color: var(--parchment-dim); }
+  .panel-close:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+  .panel h2{ font-family: var(--font-display); font-weight: 600; font-size: 1.45rem; margin: 1rem 0 0.15rem; color: var(--parchment); }
+  .panel .dates{ font-family: var(--font-mono); font-size: 0.75rem; color: var(--parchment-dim); margin-bottom: 0.8rem; }
+  .panel .school-pill{
+    display:inline-block; font-family: var(--font-mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.28rem 0.6rem; border-radius: 999px; background: var(--pill-color, var(--gold)); color: var(--ink); margin-bottom: 1rem;
+  }
+  .panel .idea{ font-family: var(--font-display); font-style: italic; font-size: 1.08rem; color: var(--gold); line-height: 1.4; margin: 0 0 0.9rem; }
+  .panel .blurb{ font-size: 0.93rem; line-height: 1.6; color: var(--parchment-dim); margin: 0 0 1.1rem; }
+  .panel .work{ font-family: var(--font-mono); font-size: 0.7rem; color: var(--parchment-dim); border-top: 1px solid var(--line); padding-top: 0.85rem; }
+  .panel .work b{ color: var(--parchment); font-weight: 500; }
+
+  .scrim{ position: fixed; inset: 0; background: rgba(15,13,11,0.5); opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 30; }
+  .scrim.open{ opacity: 1; pointer-events: auto; }
+
+  /* flowing current along each ribbon's bright core line */
+  .ribbon-core{
+    stroke-dasharray: 7 14;
+    animation: flowCurrent 2.6s linear infinite;
+  }
+  @keyframes flowCurrent{ to { stroke-dashoffset: -210; } }
+
+  /* smooth camera motion, used only while the guided tour is active */
+  .spiral-world.touring{ transition: transform 1.05s cubic-bezier(.4,0,.2,1); }
+
+  .tour-btn{
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    background: var(--gold);
+    border: none;
+    border-radius: 999px;
+    padding: 0.42rem 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: none;
+  }
+  .tour-btn:hover{ filter: brightness(1.08); }
+  .tour-btn:focus-visible{ outline: 2px solid var(--parchment); outline-offset: 2px; }
+
+  .tour-indicator{
+    position: absolute;
+    left: 50%;
+    top: 0.85rem;
+    transform: translateX(-50%);
+    z-index: 6;
+    background: rgba(15,13,11,0.78);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.35rem 0.4rem 0.35rem 0.85rem;
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--parchment-dim);
+  }
+  .tour-indicator.active{ display: inline-flex; }
+  .tour-indicator button{
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--parchment);
+    cursor: pointer;
+    font-size: 0.72rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tour-indicator button:hover{ border-color: var(--gold); color: var(--gold); }
+
+  @media (prefers-reduced-motion: reduce){
+    .panel, .node .marker, .chip{ transition: none !important; }
+    .ribbon-core{ animation: none; }
+    .spiral-world.touring{ transition: none; }
+  }
+
+  @media (max-width: 640px){
+    header.hero{ padding: 1.1rem 1.1rem 0.7rem; }
+    .controls{ padding: 0 1.1rem 0.7rem; }
+    .hint{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <p class="eyebrow">2600 años de pensamiento, en espiral</p>
+    <h1>La corriente: <em>historia de la filosofía</em></h1>
+    <p>El tiempo se enrosca desde Pitágoras, en el centro, hasta hoy, en el borde exterior. Pellizcá para acercar o alejar, arrastrá para girar el mapa. Tocá un nombre para ver su idea central.</p>
+  </header>
+
+  <div class="controls">
+    <div class="chips" id="chips" role="group" aria-label="Filtrar por escuela de pensamiento"></div>
+    <button type="button" class="tour-btn" id="tourBtn">▶ Tour guiado</button>
+    <div class="search-wrap">
+      <input type="search" id="search" placeholder="Buscar un filósofo…" aria-label="Buscar un filósofo por nombre">
+    </div>
+  </div>
+
+  <div class="spiral-shell" id="shell">
+    <span class="hint">Arrastrá para mover · pellizcá o usá la rueda para zoom</span>
+    <div class="tour-indicator" id="tourIndicator">
+      <span id="tourLabel">1 / 1</span>
+      <button type="button" id="tourStop" aria-label="Detener tour">✕</button>
+    </div>
+    <div class="spiral-world" id="world"></div>
+    <div class="zoomctl">
+      <button type="button" id="zoomIn" aria-label="Acercar">+</button>
+      <button type="button" id="zoomReset" aria-label="Centrar">⟲</button>
+      <button type="button" id="zoomOut" aria-label="Alejar">–</button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true" aria-live="polite">
+  <div class="panel-scroll">
+    <div class="panel-top">
+      <div class="seal" id="panelSeal">?</div>
+      <button class="panel-close" id="panelClose" aria-label="Cerrar">✕</button>
+    </div>
+    <h2 id="panelName"></h2>
+    <div class="dates" id="panelDates"></div>
+    <span class="school-pill" id="panelSchool"></span>
+    <p class="idea" id="panelIdea"></p>
+    <p class="blurb" id="panelBlurb"></p>
+    <div class="work" id="panelWork"></div>
+  </div>
+</aside>
+
+<script>
+(async function(){
+  "use strict";
+
+  /* ===================== DATA (embedded default, works offline / file://) ===================== */
+
+  var SCHOOLS_DEFAULT = [
+    { key:"presocratic",   label:"Presocráticos",            color:"var(--c-presocratic)" },
+    { key:"classical",     label:"Clásica griega",           color:"var(--c-classical)" },
+    { key:"hellenistic",   label:"Helenística",              color:"var(--c-hellenistic)" },
+    { key:"medieval",      label:"Escolástica medieval",     color:"var(--c-medieval)" },
+    { key:"rationalism",   label:"Racionalismo y empirismo", color:"var(--c-rationalism)" },
+    { key:"science",       label:"Filosofía natural y ciencia", color:"var(--c-science)" },
+    { key:"enlightenment", label:"Ilustración e idealismo",  color:"var(--c-enlightenment)" },
+    { key:"critique",      label:"Crítica del siglo XIX",    color:"var(--c-critique)" },
+    { key:"existential",   label:"Fenomenología y existencialismo", color:"var(--c-existential)" },
+    { key:"analytic",      label:"Filosofía analítica",      color:"var(--c-analytic)" },
+    { key:"contemporary",  label:"Contemporánea",            color:"var(--c-contemporary)" }
+  ];
+
+  var PEOPLE_DEFAULT = [
+    { name:"Pitágoras", birth:-570, death:-495, school:"presocratic", tier:"major", idea:"El cosmos es número y armonía.", blurb:"Fundó una escuela que unía matemática, música y religión, convencida de que las proporciones numéricas explican el orden del universo. Su pensamiento influyó de forma directa en Platón.", work:"Ninguna obra escrita conservada; se conoce por discípulos posteriores" },
+    { name:"Heráclito", birth:-535, death:-475, school:"presocratic", tier:"minor", idea:"Todo fluye; nada permanece.", blurb:"Sostuvo que el cambio constante, regido por un logos oculto, es la verdadera naturaleza de las cosas. Su imagen del río que nunca es el mismo se volvió un lugar común de la filosofía occidental.", work:"Sobre la naturaleza (fragmentos)" },
+    { name:"Parménides", birth:-515, death:-450, school:"presocratic", tier:"minor", idea:"El ser es, el no ser no es.", blurb:"Negó la posibilidad del cambio y la pluralidad: para él, la razón muestra que el ser es uno, eterno e inmutable, mientras los sentidos engañan. Marcó el inicio de la metafísica como disciplina.", work:"Sobre la naturaleza (poema, fragmentos)" },
+    { name:"Demócrito", birth:-460, death:-370, school:"presocratic", tier:"minor", idea:"Todo está hecho de átomos y vacío.", blurb:"Propuso que la realidad entera se compone de partículas indivisibles moviéndose en el vacío, una hipótesis que anticipó por siglos a la física atómica moderna.", work:"Gran ordenación del mundo (fragmentos)" },
+
+    { name:"Sócrates", birth:-470, death:-399, school:"classical", tier:"major", idea:"Sólo sé que no sé nada.", blurb:"No dejó textos propios: enseñaba en las calles de Atenas mediante preguntas que desarmaban certezas ajenas, el método conocido como mayéutica. Fue condenado a muerte por corromper a la juventud.", work:"Conocido a través de Platón y Jenofonte" },
+    { name:"Platón", birth:-428, death:-348, school:"classical", tier:"major", idea:"El mundo sensible es sombra de las Ideas.", blurb:"Discípulo de Sócrates, planteó que detrás de las cosas que percibimos existen formas perfectas e inmutables, accesibles solo a la razón. Fundó la Academia, la primera institución filosófica organizada de Occidente.", work:"La República" },
+    { name:"Aristóteles", birth:-384, death:-322, school:"classical", tier:"major", idea:"El conocimiento parte de la observación.", blurb:"Alumno de Platón y luego su crítico, sistematizó la lógica, la biología, la ética y la política, y sostuvo que las formas existen en las cosas mismas, no en un mundo aparte. Fundó el Liceo y fue tutor de Alejandro Magno.", work:"Ética a Nicómaco" },
+
+    { name:"Diógenes de Sinope", birth:-412, death:-323, school:"hellenistic", tier:"minor", idea:"Vivir según la naturaleza, sin convenciones.", blurb:"Llevó el cinismo al extremo práctico: vivía en un tonel, rechazaba toda posesión y desafiaba en público las normas sociales para exponer su artificialidad.", work:"Sin obras conservadas; conocido por anécdotas" },
+    { name:"Epicuro", birth:-341, death:-270, school:"hellenistic", tier:"major", idea:"El placer sereno es el fin de la vida buena.", blurb:"Enseñó que el verdadero placer no es el exceso sino la ausencia de dolor y perturbación, alcanzable mediante la amistad, la sobriedad y el estudio de la naturaleza para perder el miedo a los dioses y a la muerte.", work:"Carta a Meneceo" },
+    { name:"Zenón de Citio", birth:-334, death:-262, school:"hellenistic", tier:"major", idea:"Vivir en acuerdo con la razón universal.", blurb:"Fundó el estoicismo en el Pórtico de Atenas: sostuvo que la virtud es el único bien y que la tranquilidad se logra aceptando lo que no depende de uno.", work:"Sin obras conservadas; fundador de la Stoa" },
+    { name:"Pirrón", birth:-360, death:-270, school:"hellenistic", tier:"minor", idea:"Suspender el juicio para alcanzar la calma.", blurb:"Padre del escepticismo antiguo, argumentó que ninguna afirmación puede probarse con certeza y que la paz mental llega al abandonar la pretensión de saber.", work:"Sin obras conservadas; transmitido por Sexto Empírico" },
+
+    { name:"Agustín de Hipona", birth:354, death:430, school:"medieval", tier:"major", idea:"Cree para entender.", blurb:"Convirtió la filosofía platónica en herramienta de la fe cristiana, explorando el mal, el libre albedrío y el tiempo con una introspección que anticipa la autobiografía moderna.", work:"Confesiones" },
+    { name:"Boecio", birth:477, death:524, school:"medieval", tier:"minor", idea:"La razón consuela frente a la fortuna.", blurb:"Escribió su obra más célebre en prisión, esperando la ejecución, y transmitió el pensamiento clásico a la Edad Media a través de sus traducciones y comentarios de lógica.", work:"La consolación de la filosofía" },
+    { name:"Avicena", birth:980, death:1037, school:"medieval", tier:"minor", idea:"Existe un ser cuya esencia es existir.", blurb:"Filósofo y médico persa, distinguió entre esencia y existencia y elaboró una metafísica del ser necesario que influyó profundamente en la escolástica cristiana posterior.", work:"El libro de la curación" },
+    { name:"Averroes", birth:1126, death:1198, school:"medieval", tier:"minor", idea:"Razón y fe pueden coexistir sin fundirse.", blurb:"Comentarista cordobés de Aristóteles, defendió la autonomía de la filosofía frente a la teología, una idea que sacudió tanto al islam como a la cristiandad europea.", work:"Comentarios a Aristóteles" },
+    { name:"Tomás de Aquino", birth:1225, death:1274, school:"medieval", tier:"major", idea:"La razón natural conduce hacia la fe.", blurb:"Integró la lógica aristotélica con la teología cristiana en una síntesis monumental, sentando las bases del pensamiento católico oficial durante siglos.", work:"Suma teológica" },
+    { name:"Guillermo de Ockham", birth:1287, death:1347, school:"medieval", tier:"minor", idea:"No multiplicar entidades sin necesidad.", blurb:"Formuló el principio de economía conocido como la navaja de Ockham y defendió el nominalismo, negando que los universales existan fuera de la mente.", work:"Summa logicae" },
+
+    { name:"Nicolás Maquiavelo", birth:1469, death:1527, school:"rationalism", tier:"minor", idea:"El poder se estudia como es, no como debería ser.", blurb:"Rompió con la filosofía política moralizante para analizar el poder de forma descarnada y realista, marcando el nacimiento de la ciencia política moderna.", work:"El príncipe" },
+    { name:"Francis Bacon", birth:1561, death:1626, school:"rationalism", tier:"minor", idea:"El conocimiento se construye por observación.", blurb:"Impulsó el método inductivo experimental como camino al saber y denunció los prejuicios —los 'ídolos'— que distorsionan la mente humana.", work:"Novum Organum" },
+    { name:"Thomas Hobbes", birth:1588, death:1679, school:"rationalism", tier:"minor", idea:"El hombre es lobo del hombre sin Estado.", blurb:"Justificó la necesidad de un poder soberano absoluto a partir de un estado de naturaleza violento que solo el contrato social puede superar.", work:"Leviatán" },
+    { name:"René Descartes", birth:1596, death:1650, school:"rationalism", tier:"major", idea:"Pienso, luego existo.", blurb:"Buscó una certeza indudable dudando de todo, y la encontró en el propio acto de pensar. Su dualismo entre mente y cuerpo definió buena parte de la filosofía moderna.", work:"Discurso del método" },
+    { name:"Baruch Spinoza", birth:1632, death:1677, school:"rationalism", tier:"minor", idea:"Dios y la naturaleza son una sola sustancia.", blurb:"Desarrolló un sistema panteísta y racionalista que identificaba a Dios con la totalidad de la naturaleza, algo que le costó la excomunión de su comunidad.", work:"Ética demostrada según el orden geométrico" },
+    { name:"John Locke", birth:1632, death:1704, school:"rationalism", tier:"major", idea:"La mente nace como una hoja en blanco.", blurb:"Sostuvo que todo conocimiento proviene de la experiencia y defendió los derechos naturales a la vida, la libertad y la propiedad, sentando las bases del liberalismo político.", work:"Ensayo sobre el entendimiento humano" },
+    { name:"Gottfried Leibniz", birth:1646, death:1716, school:"rationalism", tier:"minor", idea:"El universo está hecho de mónadas.", blurb:"Concibió la realidad como un conjunto de sustancias simples y armoniosas, y sostuvo que este es, entre todos los mundos posibles, el mejor que Dios pudo crear.", work:"Monadología" },
+    { name:"George Berkeley", birth:1685, death:1753, school:"rationalism", tier:"minor", idea:"Ser es ser percibido.", blurb:"Llevó el empirismo a un idealismo radical: negó la existencia de la materia independiente de la mente que la percibe.", work:"Tratado sobre los principios del conocimiento humano" },
+    { name:"David Hume", birth:1711, death:1776, school:"rationalism", tier:"major", idea:"La causalidad es hábito, no necesidad lógica.", blurb:"Empirista escéptico, argumentó que nunca observamos la causalidad misma, solo la sucesión repetida de eventos, y que la costumbre —no la razón— guía la mayoría de nuestras creencias.", work:"Tratado de la naturaleza humana" },
+
+    { name:"Galileo Galilei", birth:1564, death:1642, school:"science", tier:"major", idea:"El libro de la naturaleza está escrito en lenguaje matemático.", blurb:"Al defender la observación y la experimentación frente a la autoridad de los textos antiguos, cambió para siempre qué cuenta como conocimiento válido. Su enfrentamiento con la Iglesia por el heliocentrismo puso en el centro el problema de la relación entre ciencia, fe y autoridad.", work:"Diálogo sobre los dos máximos sistemas del mundo" },
+    { name:"Isaac Newton", birth:1642, death:1727, school:"science", tier:"major", idea:"El universo es un mecanismo regido por leyes matemáticas universales.", blurb:"Su física de espacio y tiempo absolutos ofreció el modelo de un cosmos ordenado y predecible que alimentó el racionalismo y el determinismo ilustrado durante casi dos siglos, hasta que Einstein lo puso en discusión.", work:"Philosophiæ Naturalis Principia Mathematica" },
+    { name:"Albert Einstein", birth:1879, death:1955, school:"science", tier:"major", idea:"El espacio y el tiempo son relativos al observador.", blurb:"La teoría de la relatividad demolió la idea de un tiempo y un espacio absolutos, con hondas consecuencias filosóficas sobre la simultaneidad, la causalidad y la naturaleza del conocimiento científico que discutió en persona con Bergson y que inspiró al Círculo de Viena.", work:"Sobre la electrodinámica de los cuerpos en movimiento" },
+
+    { name:"Jean-Jacques Rousseau", birth:1712, death:1778, school:"enlightenment", tier:"minor", idea:"El hombre nace bueno; la sociedad lo corrompe.", blurb:"Cuestionó el optimismo ilustrado sobre el progreso y propuso un contrato social basado en la voluntad general como forma de recuperar la libertad perdida.", work:"El contrato social" },
+    { name:"Immanuel Kant", birth:1724, death:1804, school:"enlightenment", tier:"major", idea:"La razón organiza la experiencia que conocemos.", blurb:"Realizó un giro copernicano: en vez de preguntar cómo el conocimiento se ajusta al mundo, preguntó cómo la mente estructura lo que puede conocerse. Su ética del deber sigue siendo referencia central.", work:"Crítica de la razón pura" },
+    { name:"G. W. F. Hegel", birth:1770, death:1831, school:"enlightenment", tier:"major", idea:"La historia avanza por contradicciones que se resuelven.", blurb:"Propuso que la realidad y la historia se desarrollan mediante un movimiento dialéctico —tesis, antítesis, síntesis— hacia la plena autoconciencia del espíritu.", work:"Fenomenología del espíritu" },
+
+    { name:"Arthur Schopenhauer", birth:1788, death:1860, school:"critique", tier:"minor", idea:"Una voluntad ciega mueve todo lo que existe.", blurb:"Frente al optimismo idealista, describió una voluntad irracional y sin fin como esencia última de la realidad, fuente de un sufrimiento del que el arte y la renuncia ofrecen alivio parcial.", work:"El mundo como voluntad y representación" },
+    { name:"John Stuart Mill", birth:1806, death:1873, school:"critique", tier:"minor", idea:"Lo correcto maximiza el bienestar general.", blurb:"Refinó el utilitarismo distinguiendo placeres superiores e inferiores, y defendió la libertad individual frente a la tiranía de la mayoría.", work:"Sobre la libertad" },
+    { name:"Søren Kierkegaard", birth:1813, death:1855, school:"critique", tier:"minor", idea:"La fe exige un salto que la razón no puede dar.", blurb:"Puso el énfasis en la existencia individual, la angustia y la elección personal frente a los sistemas abstractos, anticipando al existencialismo del siglo XX.", work:"Temor y temblor" },
+    { name:"Karl Marx", birth:1818, death:1883, school:"critique", tier:"major", idea:"La historia es la historia de la lucha de clases.", blurb:"Sostuvo que las condiciones materiales y económicas determinan la conciencia social, y que el capitalismo genera contradicciones que llevan a su propia superación.", work:"El capital" },
+    { name:"Charles S. Peirce", birth:1839, death:1914, school:"critique", tier:"minor", idea:"El significado de una idea está en sus efectos prácticos.", blurb:"Fundador del pragmatismo estadounidense, sostuvo que una creencia solo tiene sentido si produce diferencias verificables en la práctica.", work:"Cómo esclarecer nuestras ideas" },
+    { name:"Friedrich Nietzsche", birth:1844, death:1900, school:"critique", tier:"major", idea:"Dios ha muerto; hay que crear nuevos valores.", blurb:"Diagnosticó el nihilismo de la civilización occidental tras la pérdida de sus fundamentos religiosos y propuso la voluntad de poder y el eterno retorno como respuestas radicales.", work:"Así habló Zaratustra" },
+
+    { name:"Edmund Husserl", birth:1859, death:1938, school:"existential", tier:"major", idea:"Volver a las cosas mismas.", blurb:"Fundó la fenomenología, un método para describir la experiencia consciente suspendiendo todo supuesto previo sobre la realidad exterior.", work:"Ideas relativas a una fenomenología pura" },
+    { name:"Martin Heidegger", birth:1889, death:1976, school:"existential", tier:"major", idea:"El ser humano existe siempre arrojado en el mundo.", blurb:"Retomó la pregunta por el sentido del ser a través del análisis de la existencia humana, finita y orientada hacia la muerte. Su influencia y su adhesión al nazismo siguen siendo objeto de debate.", work:"Ser y tiempo" },
+    { name:"Jean-Paul Sartre", birth:1905, death:1980, school:"existential", tier:"major", idea:"La existencia precede a la esencia.", blurb:"Sostuvo que el ser humano no tiene una naturaleza predeterminada: se define por sus propias elecciones, condenado a una libertad radical y a la responsabilidad que trae consigo.", work:"El ser y la nada" },
+    { name:"Simone de Beauvoir", birth:1908, death:1986, school:"existential", tier:"major", idea:"No se nace mujer: se llega a serlo.", blurb:"Aplicó el análisis existencialista a la condición femenina, mostrando cómo la sociedad construye a la mujer como el 'otro' del hombre. Sentó las bases de la teoría feminista contemporánea.", work:"El segundo sexo" },
+    { name:"Albert Camus", birth:1913, death:1960, school:"existential", tier:"minor", idea:"Hay que imaginarse a Sísifo feliz.", blurb:"Exploró el absurdo de una existencia que busca sentido en un universo silencioso, y propuso la rebeldía lúcida —no la desesperación ni el suicidio— como respuesta.", work:"El mito de Sísifo" },
+
+    { name:"Gottlob Frege", birth:1848, death:1925, school:"analytic", tier:"minor", idea:"La lógica debe fundamentar la matemática.", blurb:"Creó la lógica de predicados moderna y distinguió entre sentido y referencia, sentando las bases de la filosofía del lenguaje del siglo XX.", work:"Los fundamentos de la aritmética" },
+    { name:"Bertrand Russell", birth:1872, death:1970, school:"analytic", tier:"major", idea:"Los problemas filosóficos se aclaran analizando el lenguaje.", blurb:"Impulsó el atomismo lógico y trabajó junto a Whitehead para fundar la matemática en la lógica, además de ser una figura pública comprometida con el pacifismo.", work:"Principia Mathematica" },
+    { name:"Ludwig Wittgenstein", birth:1889, death:1951, school:"analytic", tier:"major", idea:"Los límites de mi lenguaje son los límites de mi mundo.", blurb:"En una primera etapa buscó una lógica perfecta del lenguaje; luego, se retractó y mostró que el significado surge del uso concreto en 'juegos de lenguaje' dentro de formas de vida.", work:"Tractatus logico-philosophicus" },
+    { name:"Karl Popper", birth:1902, death:1994, school:"analytic", tier:"minor", idea:"Una teoría científica debe poder refutarse.", blurb:"Propuso la falsabilidad como criterio para distinguir ciencia de pseudociencia y defendió una sociedad abierta frente a los totalitarismos del siglo XX.", work:"La lógica de la investigación científica" },
+    { name:"W. V. O. Quine", birth:1908, death:2000, school:"analytic", tier:"minor", idea:"Ninguna creencia se prueba de forma aislada.", blurb:"Cuestionó la distinción entre verdades analíticas y empíricas, y sostuvo que nuestras creencias forman una red donde cualquier parte puede revisarse frente a la evidencia.", work:"Dos dogmas del empirismo" },
+
+    { name:"Hannah Arendt", birth:1906, death:1975, school:"contemporary", tier:"major", idea:"El mal puede ser trivial, no monstruoso.", blurb:"Analizó los orígenes del totalitarismo y, al cubrir el juicio a Eichmann, acuñó la idea de la 'banalidad del mal': la capacidad de cometer atrocidades sin convicciones profundas, solo por obediencia burocrática.", work:"Los orígenes del totalitarismo" },
+    { name:"John Rawls", birth:1921, death:2002, school:"contemporary", tier:"minor", idea:"Una sociedad justa se diseña tras un velo de ignorancia.", blurb:"Propuso imaginar los principios de justicia como si se eligieran sin saber qué lugar se ocupará en la sociedad, para garantizar imparcialidad en su diseño.", work:"Teoría de la justicia" },
+    { name:"Michel Foucault", birth:1926, death:1984, school:"contemporary", tier:"major", idea:"El poder produce saber, y el saber produce poder.", blurb:"Analizó cómo las instituciones —la cárcel, el hospital, la escuela— no solo reprimen sino que producen sujetos y formas de conocimiento, entrelazando poder y verdad.", work:"Vigilar y castigar" },
+    { name:"Gilles Deleuze", birth:1925, death:1995, school:"contemporary", tier:"minor", idea:"Pensar en rizomas, no en árboles jerárquicos.", blurb:"Junto a Félix Guattari, propuso modelos de pensamiento no jerárquicos y una filosofía de la diferencia que rechaza las identidades fijas en favor del devenir constante.", work:"Mil mesetas (con Félix Guattari)" },
+    { name:"Jacques Derrida", birth:1930, death:2004, school:"contemporary", tier:"minor", idea:"Todo texto contiene las semillas de su propia contradicción.", blurb:"Desarrolló la deconstrucción, un modo de lectura que muestra cómo los textos filosóficos socavan las jerarquías conceptuales que ellos mismos establecen.", work:"De la gramatología" },
+    { name:"Jürgen Habermas", birth:1929, death:null, school:"contemporary", tier:"minor", idea:"La razón se ejerce en el diálogo, no en solitario.", blurb:"Defiende que la legitimidad social y política surge de una acción comunicativa orientada al entendimiento mutuo entre personas libres e iguales.", work:"Teoría de la acción comunicativa" },
+    { name:"Judith Butler", birth:1956, death:null, school:"contemporary", tier:"minor", idea:"El género se actúa; no es una esencia previa.", blurb:"Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.", work:"El género en disputa" }
+  ];
+
+  /* Try to load fresh data from a sibling JSON file (same origin, deployed on
+     Cloudflare Pages / Netlify). If it's missing, malformed, or blocked (e.g.
+     opening the file directly as file:// during local testing), silently
+     fall back to the embedded defaults above — the page always works. */
+  async function loadData(){
+    var fallback = { schools: SCHOOLS_DEFAULT, people: PEOPLE_DEFAULT };
+    try {
+      var res = await fetch("./philosophers-data.json", { cache: "no-store" });
+      if (!res.ok) return fallback;
+      var json = await res.json();
+      if (!json || !Array.isArray(json.schools) || !Array.isArray(json.people)) return fallback;
+      if (!json.schools.length || !json.people.length) return fallback;
+      return json;
+    } catch (e){
+      return fallback;
+    }
+  }
+
+  var DATA = await loadData();
+  var SCHOOLS = DATA.schools;
+  var PEOPLE = DATA.people;
+
+  /* ===================== SPIRAL GEOMETRY ===================== */
+
+  var START_YEAR = -600;
+  var END_YEAR = 2026;
+  var YEARS_PER_TURN = 330;          // one full revolution = 330 years
+  var INNER_R = 60;                  // radius at the very start (Pitágoras)
+  var K = 13.5;                      // radial growth per radian (~85px gap between turns)
+  var START_ANGLE = -Math.PI / 2;    // spiral starts pointing "up", like 12 on a clock
+
+  function angleFor(year){
+    return (year - START_YEAR) / YEARS_PER_TURN * Math.PI * 2;
+  }
+  function baseRadiusFor(year){
+    return INNER_R + K * angleFor(year);
+  }
+  function polarToXY(angle, radius){
+    var a = angle + START_ANGLE;
+    return { x: radius * Math.cos(a), y: radius * Math.sin(a) };
+  }
+  function fmtYear(y){
+    if (y === null || y === undefined) return "presente";
+    return y < 0 ? (-y) + " a.C." : String(y);
+  }
+  function fmtRange(p){ return fmtYear(p.birth) + " – " + fmtYear(p.death); }
+
+  /* concurrent-overlap slot assignment, so ribbons only spread apart when they truly overlap in time */
+  var schoolIndex = {};
+  SCHOOLS.forEach(function(s, i){ schoolIndex[s.key] = i; });
+
+  var schoolRange = {};
+  SCHOOLS.forEach(function(s){
+    var members = PEOPLE.filter(function(p){ return p.school === s.key; });
+    var minBirth = Math.min.apply(null, members.map(function(p){ return p.birth; }));
+    var maxEnd = Math.max.apply(null, members.map(function(p){ return p.death === null ? END_YEAR : p.death; }));
+    schoolRange[s.key] = { from: minBirth, to: maxEnd };
+  });
+
+  var slotOf = {};
+  (function assignSlots(){
+    var ordered = SCHOOLS.slice().sort(function(a,b){ return schoolRange[a.key].from - schoolRange[b.key].from; });
+    var slotEnd = [];
+    ordered.forEach(function(s){
+      var range = schoolRange[s.key];
+      var placed = false;
+      for (var i = 0; i < slotEnd.length; i++){
+        if (slotEnd[i] <= range.from){ slotOf[s.key] = i; slotEnd[i] = range.to; placed = true; break; }
+      }
+      if (!placed){ slotOf[s.key] = slotEnd.length; slotEnd.push(range.to); }
+    });
+    var maxSlots = slotEnd.length;
+    SCHOOLS.forEach(function(s){
+      slotOf[s.key] = (slotOf[s.key] - (maxSlots - 1) / 2) * 20; // px offset, centered
+    });
+  })();
+
+  function radiusFor(year, schoolKey){
+    return baseRadiusFor(year) + (schoolKey ? slotOf[schoolKey] : 0);
+  }
+
+  /* ===================== BUILD SVG WORLD ===================== */
+
+  var world = document.getElementById("world");
+  var maxAngle = angleFor(END_YEAR);
+  var maxRadius = baseRadiusFor(END_YEAR) + 120;
+  var svgSize = Math.ceil(maxRadius * 2 + 200);
+  var cx = svgSize / 2, cy = svgSize / 2;
+
+  world.style.width = svgSize + "px";
+  world.style.height = svgSize + "px";
+
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("width", svgSize);
+  svg.setAttribute("height", svgSize);
+  svg.setAttribute("viewBox", "0 0 " + svgSize + " " + svgSize);
+  svg.style.position = "absolute";
+  svg.style.top = "0"; svg.style.left = "0";
+  world.appendChild(svg);
+
+  /* neutral centerline of time, faint, for orientation */
+  (function drawCenterline(){
+    var d = "";
+    var steps = 400;
+    for (var i = 0; i <= steps; i++){
+      var year = START_YEAR + (END_YEAR - START_YEAR) * (i / steps);
+      var pt = polarToXY(angleFor(year), baseRadiusFor(year));
+      d += (i === 0 ? "M " : "L ") + (cx + pt.x).toFixed(1) + " " + (cy + pt.y).toFixed(1) + " ";
+    }
+    var path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "var(--line-strong)");
+    path.setAttribute("stroke-width", "1");
+    svg.appendChild(path);
+  })();
+
+  /* era boundary spokes */
+  var ERAS = [
+    { label:"Antigüedad", from:START_YEAR },
+    { label:"Medioevo", from:500 },
+    { label:"Moderna", from:1450 },
+    { label:"Contemporánea", from:1800 }
+  ];
+  ERAS.forEach(function(era){
+    var a = angleFor(era.from);
+    var rOuter = baseRadiusFor(era.from);
+    var p0 = polarToXY(a, 20);
+    var p1 = polarToXY(a, rOuter + 40);
+    var line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", cx + p0.x); line.setAttribute("y1", cy + p0.y);
+    line.setAttribute("x2", cx + p1.x); line.setAttribute("y2", cy + p1.y);
+    line.setAttribute("stroke", "var(--line)");
+    line.setAttribute("stroke-dasharray", "2 5");
+    svg.appendChild(line);
+
+    var tag = document.createElement("div");
+    tag.className = "era-tag";
+    tag.textContent = era.label;
+    tag.style.left = (cx + polarToXY(a, rOuter + 46).x) + "px";
+    tag.style.top = (cy + polarToXY(a, rOuter + 46).y) + "px";
+    world.appendChild(tag);
+  });
+
+  /* century ticks: pushed outward (away from center) so they clear the ribbons */
+  for (var ty = -600; ty <= 2000; ty += 100){
+    var ang = angleFor(ty);
+    var r = baseRadiusFor(ty);
+    var pt = polarToXY(ang, r);
+    var ptOut = polarToXY(ang, r + 34);
+
+    var tickMark = document.createElementNS(svgNS, "line");
+    tickMark.setAttribute("x1", cx + pt.x); tickMark.setAttribute("y1", cy + pt.y);
+    tickMark.setAttribute("x2", cx + ptOut.x); tickMark.setAttribute("y2", cy + ptOut.y);
+    tickMark.setAttribute("stroke", "var(--parchment-dim)");
+    tickMark.setAttribute("stroke-width", "1");
+    tickMark.style.opacity = "0.4";
+    svg.appendChild(tickMark);
+
+    var lbl = document.createElement("div");
+    lbl.className = "tick-label";
+    lbl.textContent = fmtYear(ty);
+    lbl.style.left = (cx + ptOut.x) + "px";
+    lbl.style.top = (cy + ptOut.y) + "px";
+    lbl.style.transform = "translate(-50%,-50%)";
+    world.appendChild(lbl);
+  }
+
+  /* school ribbons: thick translucent stroke + thin bright core, following the spiral */
+  var ribbonEls = {};
+  SCHOOLS.forEach(function(s, sIdx){
+    var range = schoolRange[s.key];
+    var steps = Math.max(6, Math.round((range.to - range.from) / 15));
+    var d = "";
+    for (var i = 0; i <= steps; i++){
+      var year = range.from + (range.to - range.from) * (i / steps);
+      var pt = polarToXY(angleFor(year), radiusFor(year, s.key));
+      d += (i === 0 ? "M " : "L ") + (cx + pt.x).toFixed(1) + " " + (cy + pt.y).toFixed(1) + " ";
+    }
+    var outline = document.createElementNS(svgNS, "path");
+    outline.setAttribute("d", d);
+    outline.setAttribute("fill", "none");
+    outline.setAttribute("stroke", "#000000");
+    outline.setAttribute("stroke-width", "19");
+    outline.setAttribute("stroke-linecap", "round");
+    outline.setAttribute("stroke-linejoin", "round");
+    outline.style.opacity = "0.35";
+    svg.appendChild(outline);
+
+    var wide = document.createElementNS(svgNS, "path");
+    wide.setAttribute("d", d);
+    wide.setAttribute("fill", "none");
+    wide.setAttribute("stroke", s.color);
+    wide.setAttribute("stroke-width", "13");
+    wide.setAttribute("stroke-linecap", "round");
+    wide.setAttribute("stroke-linejoin", "round");
+    wide.style.opacity = "0.42";
+    svg.appendChild(wide);
+
+    var core = document.createElementNS(svgNS, "path");
+    core.setAttribute("d", d);
+    core.setAttribute("fill", "none");
+    core.setAttribute("stroke", s.color);
+    core.setAttribute("stroke-width", "2.5");
+    core.setAttribute("stroke-linecap", "round");
+    core.style.opacity = "1";
+    core.setAttribute("class", "ribbon-core");
+    core.style.animationDelay = (sIdx * -0.35) + "s";
+    svg.appendChild(core);
+
+    ribbonEls[s.key] = [wide, core, outline];
+
+    /* school label near the start of its ribbon */
+    var startPt = polarToXY(angleFor(range.from), radiusFor(range.from, s.key));
+    var labelEl = document.createElement("div");
+    labelEl.className = "era-tag";
+    labelEl.style.color = s.color;
+    labelEl.style.opacity = "0.9";
+    labelEl.style.left = (cx + startPt.x) + "px";
+    labelEl.style.top = (cy + startPt.y - 16) + "px";
+    labelEl.textContent = s.label;
+    world.appendChild(labelEl);
+  });
+
+  /* center hub + "hoy" marker */
+  (function hubAndToday(){
+    var hub = document.createElementNS(svgNS, "circle");
+    hub.setAttribute("cx", cx); hub.setAttribute("cy", cy); hub.setAttribute("r", INNER_R - 14);
+    hub.setAttribute("fill", "var(--bg-alt)");
+    hub.setAttribute("stroke", "var(--line-strong)");
+    svg.appendChild(hub);
+
+    var todayPt = polarToXY(angleFor(END_YEAR), baseRadiusFor(END_YEAR));
+    var todayTag = document.createElement("div");
+    todayTag.className = "era-tag";
+    todayTag.style.color = "var(--gold)";
+    todayTag.style.opacity = "1";
+    todayTag.textContent = "HOY";
+    todayTag.style.left = (cx + todayPt.x) + "px";
+    todayTag.style.top = (cy + todayPt.y - 18) + "px";
+    world.appendChild(todayTag);
+  })();
+
+  var hubLabel = document.createElement("div");
+  hubLabel.className = "era-tag";
+  hubLabel.style.left = cx + "px";
+  hubLabel.style.top = cy + "px";
+  hubLabel.style.transform = "translate(-50%,-50%)";
+  hubLabel.style.opacity = "0.7";
+  hubLabel.innerHTML = "600 a.C.";
+  world.appendChild(hubLabel);
+
+  /* ===================== NODES ===================== */
+
+  var nodeEls = [];
+  PEOPLE.forEach(function(p, idx){
+    var school = SCHOOLS[schoolIndex[p.school]];
+    var pt = polarToXY(angleFor(p.birth), radiusFor(p.birth, p.school));
+    var x = cx + pt.x, y = cy + pt.y;
+
+    var btn = document.createElement("button");
+    btn.className = "node " + p.tier;
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+    btn.style.setProperty("--node-color", school.color);
+    btn.style.setProperty("--r", p.tier === "major" ? "14px" : "8px");
+    btn.setAttribute("aria-label", p.name + " (" + fmtRange(p) + ") — " + school.label);
+    btn.setAttribute("data-school", p.school);
+    btn.setAttribute("data-name", p.name.toLowerCase());
+
+    var marker = document.createElement("span");
+    marker.className = "marker";
+    btn.appendChild(marker);
+    var label = document.createElement("span");
+    label.className = "label";
+    label.textContent = p.name;
+    btn.appendChild(label);
+
+    btn.addEventListener("click", function(){ openPanel(p, school); });
+    world.appendChild(btn);
+    nodeEls.push({ el: btn, person: p, school: p.school, x: x, y: y });
+  });
+
+  /* ===================== CHIPS / FILTER ===================== */
+
+  var chipsWrap = document.getElementById("chips");
+  var activeSchools = new Set(SCHOOLS.map(function(s){ return s.key; }));
+
+  function applyFilter(){
+    var allActive = activeSchools.size === SCHOOLS.length;
+    SCHOOLS.forEach(function(s){
+      var on = activeSchools.has(s.key);
+      var op = allActive ? [0.42, 1, 0.35] : (on ? [0.6, 1, 0.45] : [0.03, 0.05, 0.02]);
+      ribbonEls[s.key][0].style.opacity = op[0];
+      ribbonEls[s.key][1].style.opacity = op[1];
+      ribbonEls[s.key][2].style.opacity = op[2];
+    });
+    nodeEls.forEach(function(n){
+      var on = activeSchools.has(n.school);
+      n.el.classList.toggle("dim", !on);
+    });
+    chipsWrap.querySelectorAll(".chip").forEach(function(c){
+      c.setAttribute("aria-pressed", activeSchools.has(c.dataset.key) && !allActive ? "true" : "false");
+    });
+  }
+
+  SCHOOLS.forEach(function(s){
+    var chip = document.createElement("button");
+    chip.className = "chip"; chip.type = "button"; chip.dataset.key = s.key;
+    chip.style.setProperty("--dot-color", s.color);
+    chip.setAttribute("aria-pressed", "false");
+    chip.innerHTML = '<span class="dot"></span>' + s.label;
+    chip.addEventListener("click", function(){
+      if (activeSchools.size === SCHOOLS.length){ activeSchools = new Set([s.key]); }
+      else if (activeSchools.has(s.key)){
+        activeSchools.delete(s.key);
+        if (activeSchools.size === 0) activeSchools = new Set(SCHOOLS.map(function(x){ return x.key; }));
+      } else { activeSchools.add(s.key); }
+      applyFilter();
+    });
+    chipsWrap.appendChild(chip);
+  });
+  var allChip = document.createElement("button");
+  allChip.className = "chip"; allChip.type = "button"; allChip.textContent = "Todas";
+  allChip.addEventListener("click", function(){
+    activeSchools = new Set(SCHOOLS.map(function(s){ return s.key; }));
+    applyFilter();
+  });
+  chipsWrap.insertBefore(allChip, chipsWrap.firstChild);
+
+  /* ===================== SEARCH ===================== */
+
+  var searchInput = document.getElementById("search");
+  function normalize(str){ return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+
+  searchInput.addEventListener("input", function(){
+    var q = normalize(searchInput.value.trim());
+    if (!q){
+      nodeEls.forEach(function(n){ n.el.classList.remove("dim"); n.el.classList.remove("show-label"); });
+      applyFilter();
+      return;
+    }
+    var firstMatch = null;
+    nodeEls.forEach(function(n){
+      var match = normalize(n.person.name).indexOf(q) !== -1;
+      n.el.classList.toggle("dim", !match);
+      n.el.classList.toggle("show-label", match);
+      if (match && !firstMatch) firstMatch = n;
+    });
+    if (firstMatch) panTo(firstMatch.x, firstMatch.y, 1.4);
+  });
+
+  /* ===================== PANEL ===================== */
+
+  var panel = document.getElementById("panel");
+  var scrim = document.getElementById("scrim");
+  var panelSeal = document.getElementById("panelSeal");
+  var panelName = document.getElementById("panelName");
+  var panelDates = document.getElementById("panelDates");
+  var panelSchool = document.getElementById("panelSchool");
+  var panelIdea = document.getElementById("panelIdea");
+  var panelBlurb = document.getElementById("panelBlurb");
+  var panelWork = document.getElementById("panelWork");
+  var panelClose = document.getElementById("panelClose");
+  var selectedEl = null;
+
+  function openPanel(p, school){
+    panelSeal.textContent = p.name.charAt(0);
+    panelSeal.style.setProperty("--seal-color", school.color);
+    panelName.textContent = p.name;
+    panelDates.textContent = fmtRange(p);
+    panelSchool.textContent = school.label;
+    panelSchool.style.setProperty("--pill-color", school.color);
+    panelIdea.textContent = "“" + p.idea + "”";
+    panelBlurb.textContent = p.blurb;
+    panelWork.innerHTML = "<b>Obra de referencia:</b> " + p.work;
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    scrim.classList.add("open");
+    if (selectedEl) selectedEl.classList.remove("selected");
+    var match = nodeEls.find(function(n){ return n.person === p; });
+    if (match){ match.el.classList.add("selected"); selectedEl = match.el; }
+    panelClose.focus();
+  }
+  function closePanel(){
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    scrim.classList.remove("open");
+    if (selectedEl){ selectedEl.classList.remove("selected"); selectedEl = null; }
+  }
+  panelClose.addEventListener("click", closePanel);
+  scrim.addEventListener("click", closePanel);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closePanel(); });
+
+  /* ===================== PAN & ZOOM ===================== */
+
+  var shell = document.getElementById("shell");
+  var view = { scale: 1, tx: 0, ty: 0 };
+  var MIN_SCALE = 0.3, MAX_SCALE = 3;
+
+  function applyTransform(){
+    world.style.transform = "translate(" + view.tx + "px," + view.ty + "px) scale(" + view.scale + ")";
+  }
+
+  function fitToView(){
+    var rect = shell.getBoundingClientRect();
+    var s = Math.min(rect.width, rect.height) / (svgSize * 0.62);
+    view.scale = Math.max(MIN_SCALE, Math.min(1.1, s));
+    /* center the "today" edge + hub roughly in view: center the whole svg first */
+    view.tx = rect.width / 2 - cx * view.scale;
+    view.ty = rect.height / 2 - cy * view.scale;
+    applyTransform();
+  }
+
+  function panTo(worldX, worldY, targetScale){
+    var rect = shell.getBoundingClientRect();
+    view.scale = targetScale || view.scale;
+    view.tx = rect.width / 2 - worldX * view.scale;
+    view.ty = rect.height / 2 - worldY * view.scale;
+    applyTransform();
+  }
+
+  function zoomBy(factor, centerX, centerY){
+    var rect = shell.getBoundingClientRect();
+    var cxScreen = centerX !== undefined ? centerX : rect.width / 2;
+    var cyScreen = centerY !== undefined ? centerY : rect.height / 2;
+    var worldX = (cxScreen - view.tx) / view.scale;
+    var worldY = (cyScreen - view.ty) / view.scale;
+    var newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, view.scale * factor));
+    view.tx = cxScreen - worldX * newScale;
+    view.ty = cyScreen - worldY * newScale;
+    view.scale = newScale;
+    applyTransform();
+  }
+
+  /* pointer-based drag + pinch */
+  var pointers = new Map();
+  var lastMid = null, lastDist = null;
+
+  shell.addEventListener("pointerdown", function(e){
+    if (e.target.closest(".node")) return;
+    shell.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    shell.classList.add("dragging");
+  });
+  shell.addEventListener("pointermove", function(e){
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    var pts = Array.from(pointers.values());
+    if (pts.length === 1){
+      var p = pts[0];
+      var prev = e.movementX !== undefined ? { x: e.movementX, y: e.movementY } : null;
+      if (prev){
+        view.tx += prev.x; view.ty += prev.y;
+        applyTransform();
+      }
+    } else if (pts.length >= 2){
+      var a = pts[0], b = pts[1];
+      var mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      var dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (lastDist){
+        var rect = shell.getBoundingClientRect();
+        zoomBy(dist / lastDist, mid.x - rect.left, mid.y - rect.top);
+      }
+      lastMid = mid; lastDist = dist;
+    }
+  });
+  function endPointer(e){
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2){ lastDist = null; lastMid = null; }
+    if (pointers.size === 0) shell.classList.remove("dragging");
+  }
+  shell.addEventListener("pointerup", endPointer);
+  shell.addEventListener("pointercancel", endPointer);
+  shell.addEventListener("pointerleave", function(e){ if (pointers.size <= 1) endPointer(e); });
+
+  shell.addEventListener("wheel", function(e){
+    e.preventDefault();
+    var rect = shell.getBoundingClientRect();
+    var factor = e.deltaY < 0 ? 1.1 : 0.9;
+    zoomBy(factor, e.clientX - rect.left, e.clientY - rect.top);
+  }, { passive: false });
+
+  document.getElementById("zoomIn").addEventListener("click", function(){ zoomBy(1.25); });
+  document.getElementById("zoomOut").addEventListener("click", function(){ zoomBy(0.8); });
+  document.getElementById("zoomReset").addEventListener("click", fitToView);
+
+  window.addEventListener("resize", fitToView);
+
+  /* ===================== GUIDED TOUR ===================== */
+
+  var tourBtn = document.getElementById("tourBtn");
+  var tourIndicator = document.getElementById("tourIndicator");
+  var tourLabel = document.getElementById("tourLabel");
+  var tourStopBtn = document.getElementById("tourStop");
+
+  var tourSteps = PEOPLE
+    .filter(function(p){ return p.tier === "major"; })
+    .sort(function(a, b){ return a.birth - b.birth; });
+
+  var tourActive = false, tourIndex = -1, tourTimer = null, tourTransEndTimer = null;
+  var STEP_MS = 4200;
+
+  function tourGoTo(i){
+    if (i < 0 || i >= tourSteps.length){ stopTour(); return; }
+    tourIndex = i;
+    var p = tourSteps[i];
+    var match = nodeEls.find(function(n){ return n.person === p; });
+    if (!match){ tourGoTo(i + 1); return; }
+
+    world.classList.add("touring");
+    clearTimeout(tourTransEndTimer);
+    tourTransEndTimer = setTimeout(function(){ world.classList.remove("touring"); }, 1100);
+
+    panTo(match.x, match.y, 1.5);
+    openPanel(p, SCHOOLS[schoolIndex[p.school]]);
+
+    tourLabel.textContent = (i + 1) + " / " + tourSteps.length + " · " + p.name;
+
+    clearTimeout(tourTimer);
+    tourTimer = setTimeout(function(){ tourGoTo(tourIndex + 1); }, STEP_MS);
+  }
+
+  function startTour(){
+    tourActive = true;
+    tourBtn.textContent = "⏸ Pausar tour";
+    tourIndicator.classList.add("active");
+    tourGoTo(0);
+  }
+  function stopTour(){
+    tourActive = false;
+    clearTimeout(tourTimer);
+    clearTimeout(tourTransEndTimer);
+    world.classList.remove("touring");
+    tourBtn.textContent = "▶ Tour guiado";
+    tourIndicator.classList.remove("active");
+  }
+
+  tourBtn.addEventListener("click", function(){ tourActive ? stopTour() : startTour(); });
+  tourStopBtn.addEventListener("click", stopTour);
+
+  /* any manual pan/zoom takes back control from the tour */
+  shell.addEventListener("pointerdown", function(e){
+    if (tourActive && !e.target.closest(".tour-indicator") && !e.target.closest(".zoomctl")) stopTour();
+  });
+  shell.addEventListener("wheel", function(){ if (tourActive) stopTour(); });
+
+  applyFilter();
+  requestAnimationFrame(fitToView);
+})();
+</script>
+</body>
+</html>

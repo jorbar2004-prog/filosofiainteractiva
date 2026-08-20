@@ -1,0 +1,611 @@
+{
+  "schools": [
+    {
+      "key": "presocratic",
+      "label": "Presocráticos",
+      "color": "var(--c-presocratic)"
+    },
+    {
+      "key": "classical",
+      "label": "Clásica griega",
+      "color": "var(--c-classical)"
+    },
+    {
+      "key": "hellenistic",
+      "label": "Helenística",
+      "color": "var(--c-hellenistic)"
+    },
+    {
+      "key": "medieval",
+      "label": "Escolástica medieval",
+      "color": "var(--c-medieval)"
+    },
+    {
+      "key": "rationalism",
+      "label": "Racionalismo y empirismo",
+      "color": "var(--c-rationalism)"
+    },
+    {
+      "key": "science",
+      "label": "Filosofía natural y ciencia",
+      "color": "var(--c-science)"
+    },
+    {
+      "key": "enlightenment",
+      "label": "Ilustración e idealismo",
+      "color": "var(--c-enlightenment)"
+    },
+    {
+      "key": "critique",
+      "label": "Crítica del siglo XIX",
+      "color": "var(--c-critique)"
+    },
+    {
+      "key": "existential",
+      "label": "Fenomenología y existencialismo",
+      "color": "var(--c-existential)"
+    },
+    {
+      "key": "analytic",
+      "label": "Filosofía analítica",
+      "color": "var(--c-analytic)"
+    },
+    {
+      "key": "contemporary",
+      "label": "Contemporánea",
+      "color": "var(--c-contemporary)"
+    }
+  ],
+  "people": [
+    {
+      "name": "Pitágoras",
+      "birth": -570,
+      "death": -495,
+      "school": "presocratic",
+      "tier": "major",
+      "idea": "El cosmos es número y armonía.",
+      "blurb": "Fundó una escuela que unía matemática, música y religión, convencida de que las proporciones numéricas explican el orden del universo. Su pensamiento influyó de forma directa en Platón.",
+      "work": "Ninguna obra escrita conservada; se conoce por discípulos posteriores"
+    },
+    {
+      "name": "Heráclito",
+      "birth": -535,
+      "death": -475,
+      "school": "presocratic",
+      "tier": "minor",
+      "idea": "Todo fluye; nada permanece.",
+      "blurb": "Sostuvo que el cambio constante, regido por un logos oculto, es la verdadera naturaleza de las cosas. Su imagen del río que nunca es el mismo se volvió un lugar común de la filosofía occidental.",
+      "work": "Sobre la naturaleza (fragmentos)"
+    },
+    {
+      "name": "Parménides",
+      "birth": -515,
+      "death": -450,
+      "school": "presocratic",
+      "tier": "minor",
+      "idea": "El ser es, el no ser no es.",
+      "blurb": "Negó la posibilidad del cambio y la pluralidad: para él, la razón muestra que el ser es uno, eterno e inmutable, mientras los sentidos engañan. Marcó el inicio de la metafísica como disciplina.",
+      "work": "Sobre la naturaleza (poema, fragmentos)"
+    },
+    {
+      "name": "Demócrito",
+      "birth": -460,
+      "death": -370,
+      "school": "presocratic",
+      "tier": "minor",
+      "idea": "Todo está hecho de átomos y vacío.",
+      "blurb": "Propuso que la realidad entera se compone de partículas indivisibles moviéndose en el vacío, una hipótesis que anticipó por siglos a la física atómica moderna.",
+      "work": "Gran ordenación del mundo (fragmentos)"
+    },
+    {
+      "name": "Sócrates",
+      "birth": -470,
+      "death": -399,
+      "school": "classical",
+      "tier": "major",
+      "idea": "Sólo sé que no sé nada.",
+      "blurb": "No dejó textos propios: enseñaba en las calles de Atenas mediante preguntas que desarmaban certezas ajenas, el método conocido como mayéutica. Fue condenado a muerte por corromper a la juventud.",
+      "work": "Conocido a través de Platón y Jenofonte"
+    },
+    {
+      "name": "Platón",
+      "birth": -428,
+      "death": -348,
+      "school": "classical",
+      "tier": "major",
+      "idea": "El mundo sensible es sombra de las Ideas.",
+      "blurb": "Discípulo de Sócrates, planteó que detrás de las cosas que percibimos existen formas perfectas e inmutables, accesibles solo a la razón. Fundó la Academia, la primera institución filosófica organizada de Occidente.",
+      "work": "La República"
+    },
+    {
+      "name": "Aristóteles",
+      "birth": -384,
+      "death": -322,
+      "school": "classical",
+      "tier": "major",
+      "idea": "El conocimiento parte de la observación.",
+      "blurb": "Alumno de Platón y luego su crítico, sistematizó la lógica, la biología, la ética y la política, y sostuvo que las formas existen en las cosas mismas, no en un mundo aparte. Fundó el Liceo y fue tutor de Alejandro Magno.",
+      "work": "Ética a Nicómaco"
+    },
+    {
+      "name": "Diógenes de Sinope",
+      "birth": -412,
+      "death": -323,
+      "school": "hellenistic",
+      "tier": "minor",
+      "idea": "Vivir según la naturaleza, sin convenciones.",
+      "blurb": "Llevó el cinismo al extremo práctico: vivía en un tonel, rechazaba toda posesión y desafiaba en público las normas sociales para exponer su artificialidad.",
+      "work": "Sin obras conservadas; conocido por anécdotas"
+    },
+    {
+      "name": "Epicuro",
+      "birth": -341,
+      "death": -270,
+      "school": "hellenistic",
+      "tier": "major",
+      "idea": "El placer sereno es el fin de la vida buena.",
+      "blurb": "Enseñó que el verdadero placer no es el exceso sino la ausencia de dolor y perturbación, alcanzable mediante la amistad, la sobriedad y el estudio de la naturaleza para perder el miedo a los dioses y a la muerte.",
+      "work": "Carta a Meneceo"
+    },
+    {
+      "name": "Zenón de Citio",
+      "birth": -334,
+      "death": -262,
+      "school": "hellenistic",
+      "tier": "major",
+      "idea": "Vivir en acuerdo con la razón universal.",
+      "blurb": "Fundó el estoicismo en el Pórtico de Atenas: sostuvo que la virtud es el único bien y que la tranquilidad se logra aceptando lo que no depende de uno.",
+      "work": "Sin obras conservadas; fundador de la Stoa"
+    },
+    {
+      "name": "Pirrón",
+      "birth": -360,
+      "death": -270,
+      "school": "hellenistic",
+      "tier": "minor",
+      "idea": "Suspender el juicio para alcanzar la calma.",
+      "blurb": "Padre del escepticismo antiguo, argumentó que ninguna afirmación puede probarse con certeza y que la paz mental llega al abandonar la pretensión de saber.",
+      "work": "Sin obras conservadas; transmitido por Sexto Empírico"
+    },
+    {
+      "name": "Agustín de Hipona",
+      "birth": 354,
+      "death": 430,
+      "school": "medieval",
+      "tier": "major",
+      "idea": "Cree para entender.",
+      "blurb": "Convirtió la filosofía platónica en herramienta de la fe cristiana, explorando el mal, el libre albedrío y el tiempo con una introspección que anticipa la autobiografía moderna.",
+      "work": "Confesiones"
+    },
+    {
+      "name": "Boecio",
+      "birth": 477,
+      "death": 524,
+      "school": "medieval",
+      "tier": "minor",
+      "idea": "La razón consuela frente a la fortuna.",
+      "blurb": "Escribió su obra más célebre en prisión, esperando la ejecución, y transmitió el pensamiento clásico a la Edad Media a través de sus traducciones y comentarios de lógica.",
+      "work": "La consolación de la filosofía"
+    },
+    {
+      "name": "Avicena",
+      "birth": 980,
+      "death": 1037,
+      "school": "medieval",
+      "tier": "minor",
+      "idea": "Existe un ser cuya esencia es existir.",
+      "blurb": "Filósofo y médico persa, distinguió entre esencia y existencia y elaboró una metafísica del ser necesario que influyó profundamente en la escolástica cristiana posterior.",
+      "work": "El libro de la curación"
+    },
+    {
+      "name": "Averroes",
+      "birth": 1126,
+      "death": 1198,
+      "school": "medieval",
+      "tier": "minor",
+      "idea": "Razón y fe pueden coexistir sin fundirse.",
+      "blurb": "Comentarista cordobés de Aristóteles, defendió la autonomía de la filosofía frente a la teología, una idea que sacudió tanto al islam como a la cristiandad europea.",
+      "work": "Comentarios a Aristóteles"
+    },
+    {
+      "name": "Tomás de Aquino",
+      "birth": 1225,
+      "death": 1274,
+      "school": "medieval",
+      "tier": "major",
+      "idea": "La razón natural conduce hacia la fe.",
+      "blurb": "Integró la lógica aristotélica con la teología cristiana en una síntesis monumental, sentando las bases del pensamiento católico oficial durante siglos.",
+      "work": "Suma teológica"
+    },
+    {
+      "name": "Guillermo de Ockham",
+      "birth": 1287,
+      "death": 1347,
+      "school": "medieval",
+      "tier": "minor",
+      "idea": "No multiplicar entidades sin necesidad.",
+      "blurb": "Formuló el principio de economía conocido como la navaja de Ockham y defendió el nominalismo, negando que los universales existan fuera de la mente.",
+      "work": "Summa logicae"
+    },
+    {
+      "name": "Nicolás Maquiavelo",
+      "birth": 1469,
+      "death": 1527,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "El poder se estudia como es, no como debería ser.",
+      "blurb": "Rompió con la filosofía política moralizante para analizar el poder de forma descarnada y realista, marcando el nacimiento de la ciencia política moderna.",
+      "work": "El príncipe"
+    },
+    {
+      "name": "Francis Bacon",
+      "birth": 1561,
+      "death": 1626,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "El conocimiento se construye por observación.",
+      "blurb": "Impulsó el método inductivo experimental como camino al saber y denunció los prejuicios —los 'ídolos'— que distorsionan la mente humana.",
+      "work": "Novum Organum"
+    },
+    {
+      "name": "Thomas Hobbes",
+      "birth": 1588,
+      "death": 1679,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "El hombre es lobo del hombre sin Estado.",
+      "blurb": "Justificó la necesidad de un poder soberano absoluto a partir de un estado de naturaleza violento que solo el contrato social puede superar.",
+      "work": "Leviatán"
+    },
+    {
+      "name": "René Descartes",
+      "birth": 1596,
+      "death": 1650,
+      "school": "rationalism",
+      "tier": "major",
+      "idea": "Pienso, luego existo.",
+      "blurb": "Buscó una certeza indudable dudando de todo, y la encontró en el propio acto de pensar. Su dualismo entre mente y cuerpo definió buena parte de la filosofía moderna.",
+      "work": "Discurso del método"
+    },
+    {
+      "name": "Baruch Spinoza",
+      "birth": 1632,
+      "death": 1677,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "Dios y la naturaleza son una sola sustancia.",
+      "blurb": "Desarrolló un sistema panteísta y racionalista que identificaba a Dios con la totalidad de la naturaleza, algo que le costó la excomunión de su comunidad.",
+      "work": "Ética demostrada según el orden geométrico"
+    },
+    {
+      "name": "John Locke",
+      "birth": 1632,
+      "death": 1704,
+      "school": "rationalism",
+      "tier": "major",
+      "idea": "La mente nace como una hoja en blanco.",
+      "blurb": "Sostuvo que todo conocimiento proviene de la experiencia y defendió los derechos naturales a la vida, la libertad y la propiedad, sentando las bases del liberalismo político.",
+      "work": "Ensayo sobre el entendimiento humano"
+    },
+    {
+      "name": "Gottfried Leibniz",
+      "birth": 1646,
+      "death": 1716,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "El universo está hecho de mónadas.",
+      "blurb": "Concibió la realidad como un conjunto de sustancias simples y armoniosas, y sostuvo que este es, entre todos los mundos posibles, el mejor que Dios pudo crear.",
+      "work": "Monadología"
+    },
+    {
+      "name": "George Berkeley",
+      "birth": 1685,
+      "death": 1753,
+      "school": "rationalism",
+      "tier": "minor",
+      "idea": "Ser es ser percibido.",
+      "blurb": "Llevó el empirismo a un idealismo radical: negó la existencia de la materia independiente de la mente que la percibe.",
+      "work": "Tratado sobre los principios del conocimiento humano"
+    },
+    {
+      "name": "David Hume",
+      "birth": 1711,
+      "death": 1776,
+      "school": "rationalism",
+      "tier": "major",
+      "idea": "La causalidad es hábito, no necesidad lógica.",
+      "blurb": "Empirista escéptico, argumentó que nunca observamos la causalidad misma, solo la sucesión repetida de eventos, y que la costumbre —no la razón— guía la mayoría de nuestras creencias.",
+      "work": "Tratado de la naturaleza humana"
+    },
+    {
+      "name": "Galileo Galilei",
+      "birth": 1564,
+      "death": 1642,
+      "school": "science",
+      "tier": "major",
+      "idea": "El libro de la naturaleza está escrito en lenguaje matemático.",
+      "blurb": "Al defender la observación y la experimentación frente a la autoridad de los textos antiguos, cambió para siempre qué cuenta como conocimiento válido. Su enfrentamiento con la Iglesia por el heliocentrismo puso en el centro el problema de la relación entre ciencia, fe y autoridad.",
+      "work": "Diálogo sobre los dos máximos sistemas del mundo"
+    },
+    {
+      "name": "Isaac Newton",
+      "birth": 1642,
+      "death": 1727,
+      "school": "science",
+      "tier": "major",
+      "idea": "El universo es un mecanismo regido por leyes matemáticas universales.",
+      "blurb": "Su física de espacio y tiempo absolutos ofreció el modelo de un cosmos ordenado y predecible que alimentó el racionalismo y el determinismo ilustrado durante casi dos siglos, hasta que Einstein lo puso en discusión.",
+      "work": "Philosophiæ Naturalis Principia Mathematica"
+    },
+    {
+      "name": "Albert Einstein",
+      "birth": 1879,
+      "death": 1955,
+      "school": "science",
+      "tier": "major",
+      "idea": "El espacio y el tiempo son relativos al observador.",
+      "blurb": "La teoría de la relatividad demolió la idea de un tiempo y un espacio absolutos, con hondas consecuencias filosóficas sobre la simultaneidad, la causalidad y la naturaleza del conocimiento científico que discutió en persona con Bergson y que inspiró al Círculo de Viena.",
+      "work": "Sobre la electrodinámica de los cuerpos en movimiento"
+    },
+    {
+      "name": "Jean-Jacques Rousseau",
+      "birth": 1712,
+      "death": 1778,
+      "school": "enlightenment",
+      "tier": "minor",
+      "idea": "El hombre nace bueno; la sociedad lo corrompe.",
+      "blurb": "Cuestionó el optimismo ilustrado sobre el progreso y propuso un contrato social basado en la voluntad general como forma de recuperar la libertad perdida.",
+      "work": "El contrato social"
+    },
+    {
+      "name": "Immanuel Kant",
+      "birth": 1724,
+      "death": 1804,
+      "school": "enlightenment",
+      "tier": "major",
+      "idea": "La razón organiza la experiencia que conocemos.",
+      "blurb": "Realizó un giro copernicano: en vez de preguntar cómo el conocimiento se ajusta al mundo, preguntó cómo la mente estructura lo que puede conocerse. Su ética del deber sigue siendo referencia central.",
+      "work": "Crítica de la razón pura"
+    },
+    {
+      "name": "G. W. F. Hegel",
+      "birth": 1770,
+      "death": 1831,
+      "school": "enlightenment",
+      "tier": "major",
+      "idea": "La historia avanza por contradicciones que se resuelven.",
+      "blurb": "Propuso que la realidad y la historia se desarrollan mediante un movimiento dialéctico —tesis, antítesis, síntesis— hacia la plena autoconciencia del espíritu.",
+      "work": "Fenomenología del espíritu"
+    },
+    {
+      "name": "Arthur Schopenhauer",
+      "birth": 1788,
+      "death": 1860,
+      "school": "critique",
+      "tier": "minor",
+      "idea": "Una voluntad ciega mueve todo lo que existe.",
+      "blurb": "Frente al optimismo idealista, describió una voluntad irracional y sin fin como esencia última de la realidad, fuente de un sufrimiento del que el arte y la renuncia ofrecen alivio parcial.",
+      "work": "El mundo como voluntad y representación"
+    },
+    {
+      "name": "John Stuart Mill",
+      "birth": 1806,
+      "death": 1873,
+      "school": "critique",
+      "tier": "minor",
+      "idea": "Lo correcto maximiza el bienestar general.",
+      "blurb": "Refinó el utilitarismo distinguiendo placeres superiores e inferiores, y defendió la libertad individual frente a la tiranía de la mayoría.",
+      "work": "Sobre la libertad"
+    },
+    {
+      "name": "Søren Kierkegaard",
+      "birth": 1813,
+      "death": 1855,
+      "school": "critique",
+      "tier": "minor",
+      "idea": "La fe exige un salto que la razón no puede dar.",
+      "blurb": "Puso el énfasis en la existencia individual, la angustia y la elección personal frente a los sistemas abstractos, anticipando al existencialismo del siglo XX.",
+      "work": "Temor y temblor"
+    },
+    {
+      "name": "Karl Marx",
+      "birth": 1818,
+      "death": 1883,
+      "school": "critique",
+      "tier": "major",
+      "idea": "La historia es la historia de la lucha de clases.",
+      "blurb": "Sostuvo que las condiciones materiales y económicas determinan la conciencia social, y que el capitalismo genera contradicciones que llevan a su propia superación.",
+      "work": "El capital"
+    },
+    {
+      "name": "Charles S. Peirce",
+      "birth": 1839,
+      "death": 1914,
+      "school": "critique",
+      "tier": "minor",
+      "idea": "El significado de una idea está en sus efectos prácticos.",
+      "blurb": "Fundador del pragmatismo estadounidense, sostuvo que una creencia solo tiene sentido si produce diferencias verificables en la práctica.",
+      "work": "Cómo esclarecer nuestras ideas"
+    },
+    {
+      "name": "Friedrich Nietzsche",
+      "birth": 1844,
+      "death": 1900,
+      "school": "critique",
+      "tier": "major",
+      "idea": "Dios ha muerto; hay que crear nuevos valores.",
+      "blurb": "Diagnosticó el nihilismo de la civilización occidental tras la pérdida de sus fundamentos religiosos y propuso la voluntad de poder y el eterno retorno como respuestas radicales.",
+      "work": "Así habló Zaratustra"
+    },
+    {
+      "name": "Edmund Husserl",
+      "birth": 1859,
+      "death": 1938,
+      "school": "existential",
+      "tier": "major",
+      "idea": "Volver a las cosas mismas.",
+      "blurb": "Fundó la fenomenología, un método para describir la experiencia consciente suspendiendo todo supuesto previo sobre la realidad exterior.",
+      "work": "Ideas relativas a una fenomenología pura"
+    },
+    {
+      "name": "Martin Heidegger",
+      "birth": 1889,
+      "death": 1976,
+      "school": "existential",
+      "tier": "major",
+      "idea": "El ser humano existe siempre arrojado en el mundo.",
+      "blurb": "Retomó la pregunta por el sentido del ser a través del análisis de la existencia humana, finita y orientada hacia la muerte. Su influencia y su adhesión al nazismo siguen siendo objeto de debate.",
+      "work": "Ser y tiempo"
+    },
+    {
+      "name": "Jean-Paul Sartre",
+      "birth": 1905,
+      "death": 1980,
+      "school": "existential",
+      "tier": "major",
+      "idea": "La existencia precede a la esencia.",
+      "blurb": "Sostuvo que el ser humano no tiene una naturaleza predeterminada: se define por sus propias elecciones, condenado a una libertad radical y a la responsabilidad que trae consigo.",
+      "work": "El ser y la nada"
+    },
+    {
+      "name": "Simone de Beauvoir",
+      "birth": 1908,
+      "death": 1986,
+      "school": "existential",
+      "tier": "major",
+      "idea": "No se nace mujer: se llega a serlo.",
+      "blurb": "Aplicó el análisis existencialista a la condición femenina, mostrando cómo la sociedad construye a la mujer como el 'otro' del hombre. Sentó las bases de la teoría feminista contemporánea.",
+      "work": "El segundo sexo"
+    },
+    {
+      "name": "Albert Camus",
+      "birth": 1913,
+      "death": 1960,
+      "school": "existential",
+      "tier": "minor",
+      "idea": "Hay que imaginarse a Sísifo feliz.",
+      "blurb": "Exploró el absurdo de una existencia que busca sentido en un universo silencioso, y propuso la rebeldía lúcida —no la desesperación ni el suicidio— como respuesta.",
+      "work": "El mito de Sísifo"
+    },
+    {
+      "name": "Gottlob Frege",
+      "birth": 1848,
+      "death": 1925,
+      "school": "analytic",
+      "tier": "minor",
+      "idea": "La lógica debe fundamentar la matemática.",
+      "blurb": "Creó la lógica de predicados moderna y distinguió entre sentido y referencia, sentando las bases de la filosofía del lenguaje del siglo XX.",
+      "work": "Los fundamentos de la aritmética"
+    },
+    {
+      "name": "Bertrand Russell",
+      "birth": 1872,
+      "death": 1970,
+      "school": "analytic",
+      "tier": "major",
+      "idea": "Los problemas filosóficos se aclaran analizando el lenguaje.",
+      "blurb": "Impulsó el atomismo lógico y trabajó junto a Whitehead para fundar la matemática en la lógica, además de ser una figura pública comprometida con el pacifismo.",
+      "work": "Principia Mathematica"
+    },
+    {
+      "name": "Ludwig Wittgenstein",
+      "birth": 1889,
+      "death": 1951,
+      "school": "analytic",
+      "tier": "major",
+      "idea": "Los límites de mi lenguaje son los límites de mi mundo.",
+      "blurb": "En una primera etapa buscó una lógica perfecta del lenguaje; luego, se retractó y mostró que el significado surge del uso concreto en 'juegos de lenguaje' dentro de formas de vida.",
+      "work": "Tractatus logico-philosophicus"
+    },
+    {
+      "name": "Karl Popper",
+      "birth": 1902,
+      "death": 1994,
+      "school": "analytic",
+      "tier": "minor",
+      "idea": "Una teoría científica debe poder refutarse.",
+      "blurb": "Propuso la falsabilidad como criterio para distinguir ciencia de pseudociencia y defendió una sociedad abierta frente a los totalitarismos del siglo XX.",
+      "work": "La lógica de la investigación científica"
+    },
+    {
+      "name": "W. V. O. Quine",
+      "birth": 1908,
+      "death": 2000,
+      "school": "analytic",
+      "tier": "minor",
+      "idea": "Ninguna creencia se prueba de forma aislada.",
+      "blurb": "Cuestionó la distinción entre verdades analíticas y empíricas, y sostuvo que nuestras creencias forman una red donde cualquier parte puede revisarse frente a la evidencia.",
+      "work": "Dos dogmas del empirismo"
+    },
+    {
+      "name": "Hannah Arendt",
+      "birth": 1906,
+      "death": 1975,
+      "school": "contemporary",
+      "tier": "major",
+      "idea": "El mal puede ser trivial, no monstruoso.",
+      "blurb": "Analizó los orígenes del totalitarismo y, al cubrir el juicio a Eichmann, acuñó la idea de la 'banalidad del mal': la capacidad de cometer atrocidades sin convicciones profundas, solo por obediencia burocrática.",
+      "work": "Los orígenes del totalitarismo"
+    },
+    {
+      "name": "John Rawls",
+      "birth": 1921,
+      "death": 2002,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "Una sociedad justa se diseña tras un velo de ignorancia.",
+      "blurb": "Propuso imaginar los principios de justicia como si se eligieran sin saber qué lugar se ocupará en la sociedad, para garantizar imparcialidad en su diseño.",
+      "work": "Teoría de la justicia"
+    },
+    {
+      "name": "Michel Foucault",
+      "birth": 1926,
+      "death": 1984,
+      "school": "contemporary",
+      "tier": "major",
+      "idea": "El poder produce saber, y el saber produce poder.",
+      "blurb": "Analizó cómo las instituciones —la cárcel, el hospital, la escuela— no solo reprimen sino que producen sujetos y formas de conocimiento, entrelazando poder y verdad.",
+      "work": "Vigilar y castigar"
+    },
+    {
+      "name": "Gilles Deleuze",
+      "birth": 1925,
+      "death": 1995,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "Pensar en rizomas, no en árboles jerárquicos.",
+      "blurb": "Junto a Félix Guattari, propuso modelos de pensamiento no jerárquicos y una filosofía de la diferencia que rechaza las identidades fijas en favor del devenir constante.",
+      "work": "Mil mesetas (con Félix Guattari)"
+    },
+    {
+      "name": "Jacques Derrida",
+      "birth": 1930,
+      "death": 2004,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "Todo texto contiene las semillas de su propia contradicción.",
+      "blurb": "Desarrolló la deconstrucción, un modo de lectura que muestra cómo los textos filosóficos socavan las jerarquías conceptuales que ellos mismos establecen.",
+      "work": "De la gramatología"
+    },
+    {
+      "name": "Jürgen Habermas",
+      "birth": 1929,
+      "death": null,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "La razón se ejerce en el diálogo, no en solitario.",
+      "blurb": "Defiende que la legitimidad social y política surge de una acción comunicativa orientada al entendimiento mutuo entre personas libres e iguales.",
+      "work": "Teoría de la acción comunicativa"
+    },
+    {
+      "name": "Judith Butler",
+      "birth": 1956,
+      "death": null,
+      "school": "contemporary",
+      "tier": "minor",
+      "idea": "El género se actúa; no es una esencia previa.",
+      "blurb": "Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.",
+      "work": "El género en disputa"
+    }
+  ]
+}
