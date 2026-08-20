@@ -57,16 +57,16 @@
   }
 
   header.hero{
-    padding: 1.7rem 1.75rem 1rem;
+    padding: 0.9rem 1.75rem 0.6rem;
     flex: none;
   }
   .eyebrow{
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--gold);
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.4rem;
     display:flex;
     align-items:center;
     gap: 0.6rem;
@@ -83,22 +83,22 @@
     font-optical-sizing: auto;
     font-weight: 600;
     font-variation-settings: "SOFT" 0, "WONK" 1;
-    font-size: clamp(1.5rem, 3.6vw, 2.3rem);
+    font-size: clamp(1.15rem, 2.6vw, 1.6rem);
     line-height: 1.05;
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.25rem;
     color: var(--parchment);
   }
   h1 em{ font-style: italic; font-weight: 500; color: var(--gold); }
   .hero p{
-    font-size: 0.88rem;
-    line-height: 1.5;
+    font-size: 0.78rem;
+    line-height: 1.4;
     color: var(--parchment-dim);
-    max-width: 62ch;
+    max-width: 68ch;
     margin: 0;
   }
 
   .controls{
-    padding: 0 1.75rem 0.9rem;
+    padding: 0 1.75rem 0.6rem;
     display:flex;
     flex-wrap: wrap;
     gap: 0.7rem;
@@ -154,7 +154,16 @@
     flex: 1;
     overflow: hidden;
     touch-action: none;
-    background: radial-gradient(ellipse at 50% 45%, rgba(201,162,39,0.05), transparent 60%), var(--bg);
+    background:
+      radial-gradient(1px 1px at 40px 60px, rgba(237,227,200,0.5), transparent),
+      radial-gradient(1px 1px at 170px 130px, rgba(237,227,200,0.35), transparent),
+      radial-gradient(1.5px 1.5px at 280px 40px, rgba(201,162,39,0.45), transparent),
+      radial-gradient(1px 1px at 90px 220px, rgba(237,227,200,0.3), transparent),
+      radial-gradient(1px 1px at 320px 260px, rgba(237,227,200,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 220px 190px, rgba(201,162,39,0.3), transparent),
+      radial-gradient(ellipse at 50% 45%, rgba(201,162,39,0.1), transparent 62%),
+      var(--bg);
+    background-size: 360px 300px, 360px 300px, 360px 300px, 360px 300px, 360px 300px, 360px 300px, 100% 100%, 100% 100%;
     cursor: grab;
   }
   .spiral-shell.dragging{ cursor: grabbing; }
@@ -422,8 +431,8 @@
   }
 
   @media (max-width: 640px){
-    header.hero{ padding: 1.1rem 1.1rem 0.7rem; }
-    .controls{ padding: 0 1.1rem 0.7rem; }
+    header.hero{ padding: 0.7rem 1.1rem 0.5rem; }
+    .controls{ padding: 0 1.1rem 0.5rem; }
     .hint{ display:none; }
   }
 </style>
@@ -571,7 +580,9 @@
     { name:"Gilles Deleuze", birth:1925, death:1995, school:"contemporary", tier:"minor", idea:"Pensar en rizomas, no en árboles jerárquicos.", blurb:"Junto a Félix Guattari, propuso modelos de pensamiento no jerárquicos y una filosofía de la diferencia que rechaza las identidades fijas en favor del devenir constante.", work:"Mil mesetas (con Félix Guattari)" },
     { name:"Jacques Derrida", birth:1930, death:2004, school:"contemporary", tier:"minor", idea:"Todo texto contiene las semillas de su propia contradicción.", blurb:"Desarrolló la deconstrucción, un modo de lectura que muestra cómo los textos filosóficos socavan las jerarquías conceptuales que ellos mismos establecen.", work:"De la gramatología" },
     { name:"Jürgen Habermas", birth:1929, death:null, school:"contemporary", tier:"minor", idea:"La razón se ejerce en el diálogo, no en solitario.", blurb:"Defiende que la legitimidad social y política surge de una acción comunicativa orientada al entendimiento mutuo entre personas libres e iguales.", work:"Teoría de la acción comunicativa" },
-    { name:"Judith Butler", birth:1956, death:null, school:"contemporary", tier:"minor", idea:"El género se actúa; no es una esencia previa.", blurb:"Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.", work:"El género en disputa" }
+    { name:"Judith Butler", birth:1956, death:null, school:"contemporary", tier:"minor", idea:"El género se actúa; no es una esencia previa.", blurb:"Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.", work:"El género en disputa" },
+    { name:"Yasuo Deguchi", birth:1962, death:null, school:"contemporary", tier:"minor", idea:"El sujeto de una acción no es el individuo aislado, sino un 'nosotros'.", blurb:"Filósofo japonés que combina la lógica budista (el tetralema de Nagarjuna) con la lógica y la filosofía del lenguaje occidentales. Propone el 'giro del nosotros' (we-turn): la responsabilidad de una acción —incluidas las de robots e inteligencias artificiales— no recae en un individuo, sino en un colectivo que las co-constituye.", work:"The Moon Points Back (con Jay L. Garfield y Graham Priest)" },
+    { name:"Kohei Saito", birth:1987, death:null, school:"contemporary", tier:"major", idea:"El decrecimiento, no el crecimiento verde, puede salvar el planeta.", blurb:"Rescató cuadernos tardíos e inéditos de Marx sobre ecología para argumentar que el capitalismo es estructuralmente incompatible con frenar el cambio climático. Propone el 'decrecimiento comunista': reducir la producción y organizar lo esencial —transporte, salud, educación— como bienes comunes gratuitos en vez de mercancías.", work:"El capital en el Antropoceno" }
   ];
 
   /* Try to load fresh data from a sibling JSON file (same origin, deployed on
@@ -675,24 +686,7 @@
   svg.style.top = "0"; svg.style.left = "0";
   world.appendChild(svg);
 
-  /* neutral centerline of time, faint, for orientation */
-  (function drawCenterline(){
-    var d = "";
-    var steps = 400;
-    for (var i = 0; i <= steps; i++){
-      var year = START_YEAR + (END_YEAR - START_YEAR) * (i / steps);
-      var pt = polarToXY(angleFor(year), baseRadiusFor(year));
-      d += (i === 0 ? "M " : "L ") + (cx + pt.x).toFixed(1) + " " + (cy + pt.y).toFixed(1) + " ";
-    }
-    var path = document.createElementNS(svgNS, "path");
-    path.setAttribute("d", d);
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "var(--line-strong)");
-    path.setAttribute("stroke-width", "1");
-    svg.appendChild(path);
-  })();
-
-  /* era boundary spokes */
+  /* era labels (no connecting spoke — it read as clutter at wide zoom) */
   var ERAS = [
     { label:"Antigüedad", from:START_YEAR },
     { label:"Medioevo", from:500 },
@@ -702,15 +696,6 @@
   ERAS.forEach(function(era){
     var a = angleFor(era.from);
     var rOuter = baseRadiusFor(era.from);
-    var p0 = polarToXY(a, 20);
-    var p1 = polarToXY(a, rOuter + 40);
-    var line = document.createElementNS(svgNS, "line");
-    line.setAttribute("x1", cx + p0.x); line.setAttribute("y1", cy + p0.y);
-    line.setAttribute("x2", cx + p1.x); line.setAttribute("y2", cy + p1.y);
-    line.setAttribute("stroke", "var(--line)");
-    line.setAttribute("stroke-dasharray", "2 5");
-    svg.appendChild(line);
-
     var tag = document.createElement("div");
     tag.className = "era-tag";
     tag.textContent = era.label;
