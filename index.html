@@ -481,6 +481,7 @@
       ☰ Escuelas <span class="count" id="filtersCount">11</span>
     </button>
     <button type="button" class="tour-btn" id="tourBtn">▶ Tour guiado</button>
+    <button type="button" class="filters-btn" id="modeBtn">〜 Ver lineal</button>
     <div class="search-wrap">
       <input type="search" id="search" placeholder="Buscar un filósofo…" aria-label="Buscar un filósofo por nombre">
     </div>
@@ -650,10 +651,12 @@
   var SCHOOLS = DATA.schools;
   var PEOPLE = DATA.people;
 
-  /* ===================== SPIRAL GEOMETRY ===================== */
+  /* ===================== GEOMETRY (two interchangeable layouts) ===================== */
 
   var START_YEAR = -600;
   var END_YEAR = 2026;
+
+  /* spiral layout */
   var YEARS_PER_TURN = 330;          // one full revolution = 330 years
   var INNER_R = 60;                  // radius at the very start (Pitágoras)
   var K = 13.5;                      // radial growth per radian (~85px gap between turns)
@@ -669,13 +672,20 @@
     var a = angle + START_ANGLE;
     return { x: radius * Math.cos(a), y: radius * Math.sin(a) };
   }
+
+  /* linear layout */
+  var PX_PER_YEAR = 2.1;
+  var LINEAR_LANE_GAP = 30;
+  var LINEAR_MARGIN = 90;
+
   function fmtYear(y){
     if (y === null || y === undefined) return "presente";
     return y < 0 ? (-y) + " a.C." : String(y);
   }
   function fmtRange(p){ return fmtYear(p.birth) + " – " + fmtYear(p.death); }
 
-  /* concurrent-overlap slot assignment, so ribbons only spread apart when they truly overlap in time */
+  /* concurrent-overlap slot assignment, so ribbons only spread apart when they truly overlap in time.
+     The same slot index feeds both layouts, just scaled differently (radial px vs vertical px). */
   var schoolIndex = {};
   SCHOOLS.forEach(function(s, i){ schoolIndex[s.key] = i; });
 
@@ -687,7 +697,7 @@
     schoolRange[s.key] = { from: minBirth, to: maxEnd };
   });
 
-  var slotOf = {};
+  var slotIndexOf = {}, maxSlots = 1;
   (function assignSlots(){
     var ordered = SCHOOLS.slice().sort(function(a,b){ return schoolRange[a.key].from - schoolRange[b.key].from; });
     var slotEnd = [];
@@ -695,195 +705,247 @@
       var range = schoolRange[s.key];
       var placed = false;
       for (var i = 0; i < slotEnd.length; i++){
-        if (slotEnd[i] <= range.from){ slotOf[s.key] = i; slotEnd[i] = range.to; placed = true; break; }
+        if (slotEnd[i] <= range.from){ slotIndexOf[s.key] = i; slotEnd[i] = range.to; placed = true; break; }
       }
-      if (!placed){ slotOf[s.key] = slotEnd.length; slotEnd.push(range.to); }
+      if (!placed){ slotIndexOf[s.key] = slotEnd.length; slotEnd.push(range.to); }
     });
-    var maxSlots = slotEnd.length;
-    SCHOOLS.forEach(function(s){
-      slotOf[s.key] = (slotOf[s.key] - (maxSlots - 1) / 2) * 20; // px offset, centered
-    });
+    maxSlots = slotEnd.length;
   })();
 
+  function slotOffset(schoolKey, gap){
+    if (!schoolKey) return 0;
+    return (slotIndexOf[schoolKey] - (maxSlots - 1) / 2) * gap;
+  }
   function radiusFor(year, schoolKey){
-    return baseRadiusFor(year) + (schoolKey ? slotOf[schoolKey] : 0);
+    return baseRadiusFor(year) + slotOffset(schoolKey, 20);
   }
 
-  /* ===================== BUILD SVG WORLD ===================== */
+  var mode = "spiral"; // "spiral" | "linear"
+
+  /* project(year, schoolKey) → {x, y} in local (un-centered) world units, for the active layout */
+  function project(year, schoolKey){
+    if (mode === "spiral"){
+      return polarToXY(angleFor(year), radiusFor(year, schoolKey));
+    }
+    return { x: (year - START_YEAR) * PX_PER_YEAR, y: slotOffset(schoolKey, LINEAR_LANE_GAP) };
+  }
+
+  /* ===================== BUILD WORLD (rebuildable: spiral or linear) ===================== */
 
   var world = document.getElementById("world");
-  var maxAngle = angleFor(END_YEAR);
-  var maxRadius = baseRadiusFor(END_YEAR) + 120;
-  var svgSize = Math.ceil(maxRadius * 2 + 200);
-  var cx = svgSize / 2, cy = svgSize / 2;
-
-  world.style.width = svgSize + "px";
-  world.style.height = svgSize + "px";
-
   var svgNS = "http://www.w3.org/2000/svg";
-  var svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", svgSize);
-  svg.setAttribute("height", svgSize);
-  svg.setAttribute("viewBox", "0 0 " + svgSize + " " + svgSize);
-  svg.style.position = "absolute";
-  svg.style.top = "0"; svg.style.left = "0";
-  world.appendChild(svg);
-
-  /* era labels (no connecting spoke — it read as clutter at wide zoom) */
   var ERAS = [
     { label:"Antigüedad", from:START_YEAR },
     { label:"Medioevo", from:500 },
     { label:"Moderna", from:1450 },
     { label:"Contemporánea", from:1800 }
   ];
-  ERAS.forEach(function(era){
-    var a = angleFor(era.from);
-    var rOuter = baseRadiusFor(era.from);
-    var tag = document.createElement("div");
-    tag.className = "era-tag";
-    tag.textContent = era.label;
-    tag.style.left = (cx + polarToXY(a, rOuter + 46).x) + "px";
-    tag.style.top = (cy + polarToXY(a, rOuter + 46).y) + "px";
-    world.appendChild(tag);
-  });
 
-  /* century ticks: pushed outward (away from center) so they clear the ribbons.
-     Kept dim/hidden until the user zooms in a bit, to avoid clutter on first load. */
-  var tickEls = [];
-  for (var ty = -600; ty <= 2000; ty += 100){
-    var ang = angleFor(ty);
-    var r = baseRadiusFor(ty);
-    var pt = polarToXY(ang, r);
-    var ptOut = polarToXY(ang, r + 34);
+  var worldWidth, worldHeight, cx, cy, svg, tickEls, ribbonEls, schoolLabelEls, nodeEls;
 
-    var tickMark = document.createElementNS(svgNS, "line");
-    tickMark.setAttribute("x1", cx + pt.x); tickMark.setAttribute("y1", cy + pt.y);
-    tickMark.setAttribute("x2", cx + ptOut.x); tickMark.setAttribute("y2", cy + ptOut.y);
-    tickMark.setAttribute("stroke", "var(--parchment-dim)");
-    tickMark.setAttribute("stroke-width", "1");
-    tickMark.setAttribute("class", "tick-mark");
-    svg.appendChild(tickMark);
+  function buildWorld(newMode){
+    mode = newMode;
+    world.innerHTML = "";
+    tickEls = []; ribbonEls = {}; schoolLabelEls = []; nodeEls = [];
 
-    var lbl = document.createElement("div");
-    lbl.className = "tick-label";
-    lbl.textContent = fmtYear(ty);
-    lbl.style.left = (cx + ptOut.x) + "px";
-    lbl.style.top = (cy + ptOut.y) + "px";
-    lbl.style.transform = "translate(-50%,-50%)";
-    world.appendChild(lbl);
-
-    tickEls.push({ mark: tickMark, label: lbl });
-  }
-
-  /* school ribbons: thick translucent stroke + thin bright core, following the spiral */
-  var ribbonEls = {};
-  var schoolLabelEls = [];
-  SCHOOLS.forEach(function(s, sIdx){
-    var range = schoolRange[s.key];
-    var steps = Math.max(6, Math.round((range.to - range.from) / 15));
-    var d = "";
-    for (var i = 0; i <= steps; i++){
-      var year = range.from + (range.to - range.from) * (i / steps);
-      var pt = polarToXY(angleFor(year), radiusFor(year, s.key));
-      d += (i === 0 ? "M " : "L ") + (cx + pt.x).toFixed(1) + " " + (cy + pt.y).toFixed(1) + " ";
+    if (mode === "spiral"){
+      var maxRadius = baseRadiusFor(END_YEAR) + 120;
+      worldWidth = worldHeight = Math.ceil(maxRadius * 2 + 200);
+    } else {
+      worldWidth = Math.ceil((END_YEAR - START_YEAR) * PX_PER_YEAR) + LINEAR_MARGIN * 2;
+      worldHeight = Math.ceil(maxSlots * LINEAR_LANE_GAP * 2 + 220);
     }
-    var outline = document.createElementNS(svgNS, "path");
-    outline.setAttribute("d", d);
-    outline.setAttribute("fill", "none");
-    outline.setAttribute("stroke", "#000000");
-    outline.setAttribute("stroke-width", "11");
-    outline.setAttribute("stroke-linecap", "round");
-    outline.setAttribute("stroke-linejoin", "round");
-    outline.style.opacity = "0.4";
-    svg.appendChild(outline);
+    cx = worldWidth / 2; cy = worldHeight / 2;
 
-    var wide = document.createElementNS(svgNS, "path");
-    wide.setAttribute("d", d);
-    wide.setAttribute("fill", "none");
-    wide.setAttribute("stroke", s.color);
-    wide.setAttribute("stroke-width", "7");
-    wide.setAttribute("stroke-linecap", "round");
-    wide.setAttribute("stroke-linejoin", "round");
-    wide.style.opacity = "0.68";
-    svg.appendChild(wide);
+    world.style.width = worldWidth + "px";
+    world.style.height = worldHeight + "px";
 
-    var core = document.createElementNS(svgNS, "path");
-    core.setAttribute("d", d);
-    core.setAttribute("fill", "none");
-    core.setAttribute("stroke", s.color);
-    core.setAttribute("stroke-width", "2.2");
-    core.setAttribute("stroke-linecap", "round");
-    core.style.opacity = "1";
-    svg.appendChild(core);
+    svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", worldWidth);
+    svg.setAttribute("height", worldHeight);
+    svg.setAttribute("viewBox", "0 0 " + worldWidth + " " + worldHeight);
+    svg.style.position = "absolute";
+    svg.style.top = "0"; svg.style.left = "0";
+    world.appendChild(svg);
 
-    ribbonEls[s.key] = [wide, core, outline];
+    var originX = mode === "spiral" ? cx : LINEAR_MARGIN;
+    var originY = mode === "spiral" ? cy : cy;
 
-    /* school label near the start of its ribbon — visible when zoomed out for
-       orientation, fades away on close zoom so it doesn't fight with node labels */
-    var startPt = polarToXY(angleFor(range.from), radiusFor(range.from, s.key));
-    var labelEl = document.createElement("div");
-    labelEl.className = "era-tag school-tag";
-    labelEl.style.color = s.color;
-    labelEl.style.left = (cx + startPt.x) + "px";
-    labelEl.style.top = (cy + startPt.y - 16) + "px";
-    labelEl.textContent = s.label;
-    world.appendChild(labelEl);
-    schoolLabelEls.push(labelEl);
-  });
+    function place(year, schoolKey){
+      var p = project(year, schoolKey);
+      return { x: originX + p.x, y: originY + p.y };
+    }
 
-  /* center hub + "hoy" marker (no separate centered date text — it collided
-     with the earliest nodes once more traditions started near the same point) */
-  (function hubAndToday(){
-    var hub = document.createElementNS(svgNS, "circle");
-    hub.setAttribute("cx", cx); hub.setAttribute("cy", cy); hub.setAttribute("r", INNER_R - 14);
-    hub.setAttribute("fill", "var(--bg-alt)");
-    hub.setAttribute("stroke", "var(--line-strong)");
-    svg.appendChild(hub);
-
-    var todayPt = polarToXY(angleFor(END_YEAR), baseRadiusFor(END_YEAR));
+    /* axis chrome: spiral gets a center hub; linear keeps it bare (ribbons + ticks are enough) */
+    if (mode === "spiral"){
+      var hub = document.createElementNS(svgNS, "circle");
+      hub.setAttribute("cx", cx); hub.setAttribute("cy", cy); hub.setAttribute("r", INNER_R - 14);
+      hub.setAttribute("fill", "var(--bg-alt)");
+      hub.setAttribute("stroke", "var(--line-strong)");
+      svg.appendChild(hub);
+    }
+    var todayPt = place(END_YEAR, null);
     var todayTag = document.createElement("div");
     todayTag.className = "era-tag";
     todayTag.style.color = "var(--gold)";
     todayTag.style.opacity = "1";
     todayTag.textContent = "HOY";
-    todayTag.style.left = (cx + todayPt.x) + "px";
-    todayTag.style.top = (cy + todayPt.y - 18) + "px";
+    todayTag.style.left = todayPt.x + "px";
+    todayTag.style.top = (todayPt.y - 18) + "px";
     world.appendChild(todayTag);
-  })();
 
-  /* ===================== NODES ===================== */
+    /* era labels */
+    ERAS.forEach(function(era){
+      var pt = mode === "spiral" ? place2(era.from) : place(era.from, null);
+      var tag = document.createElement("div");
+      tag.className = "era-tag";
+      tag.textContent = era.label;
+      tag.style.left = pt.x + "px";
+      tag.style.top = (mode === "spiral" ? pt.y : cy - maxSlots * LINEAR_LANE_GAP - 34) + "px";
+      world.appendChild(tag);
+      function place2(year){
+        var a = angleFor(year), rOuter = baseRadiusFor(year);
+        var xy = polarToXY(a, rOuter + 46);
+        return { x: cx + xy.x, y: cy + xy.y };
+      }
+    });
 
-  var nodeEls = [];
-  PEOPLE.forEach(function(p, idx){
-    var school = SCHOOLS[schoolIndex[p.school]];
-    var pt = polarToXY(angleFor(p.birth), radiusFor(p.birth, p.school));
-    var x = cx + pt.x, y = cy + pt.y;
+    /* century ticks — kept dim/hidden until the user zooms in a bit */
+    for (var ty = -600; ty <= 2000; ty += 100){
+      var tickMark = document.createElementNS(svgNS, "line");
+      var lbl = document.createElement("div");
+      lbl.className = "tick-label";
+      lbl.textContent = fmtYear(ty);
+      lbl.style.transform = "translate(-50%,-50%)";
 
-    var btn = document.createElement("button");
-    btn.className = "node " + p.tier;
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
-    btn.style.setProperty("--node-color", school.color);
-    btn.style.setProperty("--r", p.tier === "major" ? "14px" : "8px");
-    btn.setAttribute("aria-label", p.name + " (" + fmtRange(p) + ") — " + school.label);
-    btn.setAttribute("data-school", p.school);
-    btn.setAttribute("data-name", p.name.toLowerCase());
+      if (mode === "spiral"){
+        var ang = angleFor(ty), r = baseRadiusFor(ty);
+        var pt = polarToXY(ang, r), ptOut = polarToXY(ang, r + 34);
+        tickMark.setAttribute("x1", cx + pt.x); tickMark.setAttribute("y1", cy + pt.y);
+        tickMark.setAttribute("x2", cx + ptOut.x); tickMark.setAttribute("y2", cy + ptOut.y);
+        lbl.style.left = (cx + ptOut.x) + "px"; lbl.style.top = (cy + ptOut.y) + "px";
+      } else {
+        var tx = place(ty, null).x;
+        tickMark.setAttribute("x1", tx); tickMark.setAttribute("y1", cy + maxSlots * LINEAR_LANE_GAP + 16);
+        tickMark.setAttribute("x2", tx); tickMark.setAttribute("y2", cy + maxSlots * LINEAR_LANE_GAP + 34);
+        lbl.style.left = tx + "px"; lbl.style.top = (cy + maxSlots * LINEAR_LANE_GAP + 46) + "px";
+      }
+      tickMark.setAttribute("stroke", "var(--parchment-dim)");
+      tickMark.setAttribute("stroke-width", "1");
+      tickMark.setAttribute("class", "tick-mark");
+      svg.appendChild(tickMark);
+      world.appendChild(lbl);
+      tickEls.push({ mark: tickMark, label: lbl });
+    }
 
-    var marker = document.createElement("span");
-    marker.className = "marker";
-    btn.appendChild(marker);
-    var label = document.createElement("span");
-    label.className = "label";
-    label.textContent = p.name;
-    btn.appendChild(label);
-    var dateEl = document.createElement("span");
-    dateEl.className = "node-date";
-    dateEl.textContent = fmtRange(p);
-    btn.appendChild(dateEl);
+    /* school ribbons: thick translucent stroke + thin bright core */
+    SCHOOLS.forEach(function(s){
+      var range = schoolRange[s.key];
+      var steps = Math.max(6, Math.round((range.to - range.from) / 15));
+      var d = "";
+      for (var i = 0; i <= steps; i++){
+        var year = range.from + (range.to - range.from) * (i / steps);
+        var pt = place(year, s.key);
+        d += (i === 0 ? "M " : "L ") + pt.x.toFixed(1) + " " + pt.y.toFixed(1) + " ";
+      }
+      var outline = document.createElementNS(svgNS, "path");
+      outline.setAttribute("d", d); outline.setAttribute("fill", "none");
+      outline.setAttribute("stroke", "#000000"); outline.setAttribute("stroke-width", "11");
+      outline.setAttribute("stroke-linecap", "round"); outline.setAttribute("stroke-linejoin", "round");
+      outline.style.opacity = "0.4";
+      svg.appendChild(outline);
 
-    btn.addEventListener("click", function(){ openPanel(p, school); });
-    world.appendChild(btn);
-    nodeEls.push({ el: btn, person: p, school: p.school, x: x, y: y, dateEl: dateEl });
+      var wide = document.createElementNS(svgNS, "path");
+      wide.setAttribute("d", d); wide.setAttribute("fill", "none");
+      wide.setAttribute("stroke", s.color); wide.setAttribute("stroke-width", "7");
+      wide.setAttribute("stroke-linecap", "round"); wide.setAttribute("stroke-linejoin", "round");
+      wide.style.opacity = "0.68";
+      svg.appendChild(wide);
+
+      var core = document.createElementNS(svgNS, "path");
+      core.setAttribute("d", d); core.setAttribute("fill", "none");
+      core.setAttribute("stroke", s.color); core.setAttribute("stroke-width", "2.2");
+      core.setAttribute("stroke-linecap", "round");
+      core.style.opacity = "1";
+      svg.appendChild(core);
+
+      ribbonEls[s.key] = [wide, core, outline];
+
+      var startPt = place(range.from, s.key);
+      var labelEl = document.createElement("div");
+      labelEl.className = "era-tag school-tag";
+      labelEl.style.color = s.color;
+      labelEl.style.left = startPt.x + "px";
+      labelEl.style.top = (startPt.y - 16) + "px";
+      labelEl.textContent = s.label;
+      world.appendChild(labelEl);
+      schoolLabelEls.push(labelEl);
+    });
+
+    /* nodes */
+    PEOPLE.forEach(function(p, idx){
+      var school = SCHOOLS[schoolIndex[p.school]];
+      var pt = place(p.birth, p.school);
+      var x = pt.x, y = pt.y;
+
+      var btn = document.createElement("button");
+      btn.className = "node " + p.tier;
+      btn.style.left = x + "px";
+      btn.style.top = y + "px";
+      btn.style.setProperty("--node-color", school.color);
+      btn.style.setProperty("--r", p.tier === "major" ? "14px" : "8px");
+      btn.setAttribute("aria-label", p.name + " (" + fmtRange(p) + ") — " + school.label);
+      btn.setAttribute("data-school", p.school);
+      btn.setAttribute("data-name", p.name.toLowerCase());
+      btn.setAttribute("data-index", String(idx));
+
+      var marker = document.createElement("span");
+      marker.className = "marker";
+      btn.appendChild(marker);
+      var label = document.createElement("span");
+      label.className = "label";
+      label.textContent = p.name;
+      btn.appendChild(label);
+      var dateEl = document.createElement("span");
+      dateEl.className = "node-date";
+      dateEl.textContent = fmtRange(p);
+      btn.appendChild(dateEl);
+
+      world.appendChild(btn);
+      nodeEls.push({ el: btn, person: p, school: p.school, x: x, y: y, dateEl: dateEl });
+    });
+  }
+
+  buildWorld("spiral");
+
+  /* Delegated click handling: with many nodes close together (e.g. Confucio, Laozi and
+     Pitágoras almost on top of each other), relying on "whichever button is on top of the
+     DOM stack" often selects the wrong philosopher. Instead, on every click we find the
+     node whose actual dot is closest to the click point and open that one. */
+  world.addEventListener("click", function(e){
+    var target = e.target.closest(".node");
+    if (!target) return;
+
+    if (e.detail === 0){
+      /* keyboard-triggered click (Enter/Space on a focused button): no reliable
+         pointer coordinates, so just use the node that was actually focused */
+      var idx = parseInt(target.getAttribute("data-index"), 10);
+      var direct = nodeEls[idx];
+      if (direct) openPanel(direct.person, SCHOOLS[schoolIndex[direct.school]]);
+      return;
+    }
+
+    var rect = shell.getBoundingClientRect();
+    var clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
+    var best = null, bestDist = Infinity;
+    nodeEls.forEach(function(n){
+      var sx = view.tx + n.x * view.scale;
+      var sy = view.ty + n.y * view.scale;
+      var dx = sx - clickX, dy = sy - clickY;
+      var dist = dx * dx + dy * dy;
+      if (dist < bestDist){ bestDist = dist; best = n; }
+    });
+    if (best) openPanel(best.person, SCHOOLS[schoolIndex[best.school]]);
   });
 
   /* ===================== CHIPS / FILTER ===================== */
@@ -1025,7 +1087,7 @@
 
   var shell = document.getElementById("shell");
   var view = { scale: 1, tx: 0, ty: 0 };
-  var MIN_SCALE = 0.3, MAX_SCALE = 3;
+  var MIN_SCALE = 0.3, MAX_SCALE = 7;
 
   function applyTransform(){
     world.style.transform = "translate(" + view.tx + "px," + view.ty + "px) scale(" + view.scale + ")";
@@ -1057,9 +1119,8 @@
 
   function fitToView(){
     var rect = shell.getBoundingClientRect();
-    var s = Math.min(rect.width, rect.height) / (svgSize * 0.62);
-    view.scale = Math.max(MIN_SCALE, Math.min(1.1, s));
-    /* center the "today" edge + hub roughly in view: center the whole svg first */
+    var s = Math.min(rect.width / worldWidth, rect.height / worldHeight) * (mode === "spiral" ? 0.94 : 0.92);
+    view.scale = Math.max(MIN_SCALE, Math.min(1.4, s));
     view.tx = rect.width / 2 - cx * view.scale;
     view.ty = rect.height / 2 - cy * view.scale;
     applyTransform();
@@ -1203,6 +1264,21 @@
     if (tourActive && !e.target.closest(".tour-indicator") && !e.target.closest(".zoomctl")) stopTour();
   });
   shell.addEventListener("wheel", function(){ if (tourActive) stopTour(); });
+
+  /* ===================== VIEW MODE TOGGLE ===================== */
+
+  var modeBtn = document.getElementById("modeBtn");
+  function setMode(newMode){
+    if (newMode === mode) return;
+    if (typeof tourActive !== "undefined" && tourActive) stopTour();
+    closePanel();
+    buildWorld(newMode);
+    lodTickShown = null; lodDatesShown = null; lodSchoolShown = null;
+    applyFilter();
+    fitToView();
+    modeBtn.textContent = newMode === "spiral" ? "〜 Ver lineal" : "🌀 Ver espiral";
+  }
+  modeBtn.addEventListener("click", function(){ setMode(mode === "spiral" ? "linear" : "spiral"); });
 
   applyFilter();
   requestAnimationFrame(fitToView);
