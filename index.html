@@ -10,27 +10,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..800,0..100,0..1&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0f0d0b;
-    --bg-alt: #17130f;
-    --bg-raise: #1e1912;
-    --parchment: #ede3c8;
-    --parchment-dim: #cbbd96;
-    --ink: #1c1710;
-    --gold: #c9a227;
-    --line: rgba(233,223,196,0.14);
-    --line-strong: rgba(233,223,196,0.28);
+    --bg: #eef2e6;
+    --bg-alt: #e2ead2;
+    --bg-raise: #d5e0c5;
+    --parchment: #263420;
+    --parchment-dim: #57694c;
+    --ink: #16200f;
+    --gold: #8f6f10;
+    --line: rgba(28,40,18,0.14);
+    --line-strong: rgba(28,40,18,0.28);
+    --overlay-bg: rgba(255,255,255,0.86);
 
-    --c-presocratic: #7c9b5c;
-    --c-classical: #bd4a3a;
-    --c-hellenistic: #2f83a0;
-    --c-medieval: #8a6a3c;
-    --c-rationalism: #7758a0;
-    --c-enlightenment: #cf9a2e;
-    --c-critique: #2f8a76;
-    --c-existential: #a3466e;
-    --c-analytic: #5568b8;
-    --c-contemporary: #cf6a34;
-    --c-science: #7d8fa3;
+    --c-presocratic: #4f7a3a;
+    --c-classical: #a5372a;
+    --c-hellenistic: #206883;
+    --c-medieval: #78581f;
+    --c-rationalism: #5f3f8c;
+    --c-enlightenment: #a97a13;
+    --c-critique: #1c705e;
+    --c-existential: #8a2f57;
+    --c-analytic: #38499e;
+    --c-contemporary: #b5501a;
+    --c-science: #52667c;
+    --c-chinese: #2f8f5e;
 
     --font-display: "Fraunces", "Source Serif 4", serif;
     --font-body: "Source Serif 4", Georgia, serif;
@@ -130,7 +132,7 @@
     transition: border-color .15s, color .15s, background .15s;
   }
   .chip .dot{ width: 7px; height: 7px; border-radius: 50%; background: var(--dot-color, var(--gold)); flex: none; }
-  .chip[aria-pressed="true"]{ color: var(--ink); background: var(--parchment); border-color: var(--parchment); }
+  .chip[aria-pressed="true"]{ color: var(--ink); background: var(--gold); border-color: var(--gold); }
   .chip:hover{ border-color: var(--parchment-dim); color: var(--parchment); }
   .chip:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
 
@@ -155,13 +157,13 @@
     overflow: hidden;
     touch-action: none;
     background:
-      radial-gradient(1px 1px at 40px 60px, rgba(237,227,200,0.5), transparent),
-      radial-gradient(1px 1px at 170px 130px, rgba(237,227,200,0.35), transparent),
-      radial-gradient(1.5px 1.5px at 280px 40px, rgba(201,162,39,0.45), transparent),
-      radial-gradient(1px 1px at 90px 220px, rgba(237,227,200,0.3), transparent),
-      radial-gradient(1px 1px at 320px 260px, rgba(237,227,200,0.4), transparent),
-      radial-gradient(1.5px 1.5px at 220px 190px, rgba(201,162,39,0.3), transparent),
-      radial-gradient(ellipse at 50% 45%, rgba(201,162,39,0.1), transparent 62%),
+      radial-gradient(1px 1px at 40px 60px, rgba(38,52,32,0.16), transparent),
+      radial-gradient(1px 1px at 170px 130px, rgba(38,52,32,0.12), transparent),
+      radial-gradient(1.5px 1.5px at 280px 40px, rgba(143,111,16,0.18), transparent),
+      radial-gradient(1px 1px at 90px 220px, rgba(38,52,32,0.1), transparent),
+      radial-gradient(1px 1px at 320px 260px, rgba(38,52,32,0.14), transparent),
+      radial-gradient(1.5px 1.5px at 220px 190px, rgba(143,111,16,0.14), transparent),
+      radial-gradient(ellipse at 50% 45%, rgba(143,111,16,0.08), transparent 62%),
       var(--bg);
     background-size: 360px 300px, 360px 300px, 360px 300px, 360px 300px, 360px 300px, 360px 300px, 100% 100%, 100% 100%;
     cursor: grab;
@@ -228,7 +230,7 @@
     opacity: 0;
     white-space: nowrap;
     pointer-events: none;
-    background: rgba(15,13,11,0.72);
+    background: var(--overlay-bg);
     border: 1px solid var(--line-strong);
     padding: 0.1rem 0.35rem;
     border-radius: 4px;
@@ -300,7 +302,7 @@
     display:flex; align-items:center; justify-content:center;
     font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
     background: var(--seal-color, var(--gold)); color: var(--ink);
-    flex: none; box-shadow: 0 0 0 4px rgba(237,227,200,0.06);
+    flex: none; box-shadow: 0 0 0 4px rgba(22,32,15,0.08);
   }
   .panel-close{
     background: none; border: 1px solid var(--line-strong); color: var(--parchment-dim);
@@ -322,13 +324,6 @@
 
   .scrim{ position: fixed; inset: 0; background: rgba(15,13,11,0.5); opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 30; }
   .scrim.open{ opacity: 1; pointer-events: auto; }
-
-  /* flowing current along each ribbon's bright core line */
-  .ribbon-flow{
-    stroke-dasharray: 3 34;
-    animation: flowCurrent 3.4s linear infinite;
-  }
-  @keyframes flowCurrent{ to { stroke-dashoffset: -210; } }
 
   /* smooth camera motion, used only while the guided tour is active */
   .spiral-world.touring{ transition: transform 1.05s cubic-bezier(.4,0,.2,1); }
@@ -402,7 +397,7 @@
     top: 0.85rem;
     transform: translateX(-50%);
     z-index: 6;
-    background: rgba(15,13,11,0.78);
+    background: var(--overlay-bg);
     border: 1px solid var(--line-strong);
     border-radius: 999px;
     padding: 0.35rem 0.4rem 0.35rem 0.85rem;
@@ -428,7 +423,6 @@
 
   @media (prefers-reduced-motion: reduce){
     .panel, .node .marker, .chip{ transition: none !important; }
-    .ribbon-flow{ animation: none; }
     .spiral-world.touring{ transition: none; }
   }
 
@@ -533,7 +527,8 @@
     { key:"critique",      label:"Crítica del siglo XIX",    color:"var(--c-critique)" },
     { key:"existential",   label:"Fenomenología y existencialismo", color:"var(--c-existential)" },
     { key:"analytic",      label:"Filosofía analítica",      color:"var(--c-analytic)" },
-    { key:"contemporary",  label:"Contemporánea",            color:"var(--c-contemporary)" }
+    { key:"contemporary",  label:"Contemporánea",            color:"var(--c-contemporary)" },
+    { key:"chinese",       label:"Filosofía china",          color:"var(--c-chinese)" }
   ];
 
   var PEOPLE_DEFAULT = [
@@ -603,7 +598,18 @@
     { name:"Jürgen Habermas", birth:1929, death:null, school:"contemporary", tier:"minor", idea:"La razón se ejerce en el diálogo, no en solitario.", blurb:"Defiende que la legitimidad social y política surge de una acción comunicativa orientada al entendimiento mutuo entre personas libres e iguales.", work:"Teoría de la acción comunicativa" },
     { name:"Judith Butler", birth:1956, death:null, school:"contemporary", tier:"minor", idea:"El género se actúa; no es una esencia previa.", blurb:"Propuso que el género no expresa una identidad interior fija sino que se constituye mediante actos repetidos y socialmente reconocidos, una idea central para la teoría queer.", work:"El género en disputa" },
     { name:"Yasuo Deguchi", birth:1962, death:null, school:"contemporary", tier:"minor", idea:"El sujeto de una acción no es el individuo aislado, sino un 'nosotros'.", blurb:"Filósofo japonés que combina la lógica budista (el tetralema de Nagarjuna) con la lógica y la filosofía del lenguaje occidentales. Propone el 'giro del nosotros' (we-turn): la responsabilidad de una acción —incluidas las de robots e inteligencias artificiales— no recae en un individuo, sino en un colectivo que las co-constituye.", work:"The Moon Points Back (con Jay L. Garfield y Graham Priest)" },
-    { name:"Kohei Saito", birth:1987, death:null, school:"contemporary", tier:"major", idea:"El decrecimiento, no el crecimiento verde, puede salvar el planeta.", blurb:"Rescató cuadernos tardíos e inéditos de Marx sobre ecología para argumentar que el capitalismo es estructuralmente incompatible con frenar el cambio climático. Propone el 'decrecimiento comunista': reducir la producción y organizar lo esencial —transporte, salud, educación— como bienes comunes gratuitos en vez de mercancías.", work:"El capital en el Antropoceno" }
+    { name:"Kohei Saito", birth:1987, death:null, school:"contemporary", tier:"major", idea:"El decrecimiento, no el crecimiento verde, puede salvar el planeta.", blurb:"Rescató cuadernos tardíos e inéditos de Marx sobre ecología para argumentar que el capitalismo es estructuralmente incompatible con frenar el cambio climático. Propone el 'decrecimiento comunista': reducir la producción y organizar lo esencial —transporte, salud, educación— como bienes comunes gratuitos en vez de mercancías.", work:"El capital en el Antropoceno" },
+
+    { name:"Confucio", birth:-551, death:-479, school:"chinese", tier:"major", idea:"El orden social nace de la virtud personal y el ritual.", blurb:"Maestro itinerante cuyas enseñanzas sobre la piedad filial, el ritual (li) y la benevolencia (ren) se convirtieron en la columna vertebral del pensamiento y la organización social de China durante más de dos mil años.", work:"Analectas (recopiladas por sus discípulos)" },
+    { name:"Laozi", birth:-571, death:-471, school:"chinese", tier:"major", idea:"El Tao que puede nombrarse no es el Tao eterno.", blurb:"Figura semi-legendaria a quien se atribuye la fundación del taoísmo: propuso vivir en armonía con el Tao —el curso natural de las cosas— mediante la no-acción (wu wei) antes que mediante el control o la imposición.", work:"Dao De Jing" },
+    { name:"Mozi", birth:-470, death:-391, school:"chinese", tier:"minor", idea:"Amor universal e imparcial, sin jerarquías de afecto.", blurb:"Fundó el moísmo como crítica directa al confucianismo: sostuvo que el amor filial jerárquico genera conflicto, y propuso un amor imparcial hacia todas las personas por igual, junto con una ética de utilidad social temprana.", work:"Mozi (compilación de su escuela)" },
+    { name:"Zhuangzi", birth:-369, death:-286, school:"chinese", tier:"minor", idea:"¿Soy un hombre que soñó ser mariposa, o una mariposa que sueña ser hombre?", blurb:"Llevó el taoísmo hacia el escepticismo y la relatividad de todo punto de vista fijo, con una prosa llena de parábolas que cuestionan la distinción entre sueño y vigilia, entre lo útil y lo inútil.", work:"Zhuangzi" },
+    { name:"Mencio", birth:-372, death:-289, school:"chinese", tier:"minor", idea:"La naturaleza humana es intrínsecamente buena.", blurb:"Principal continuador de Confucio, sostuvo que todo ser humano nace con brotes morales innatos —compasión, vergüenza, cortesía, sentido de lo correcto— que la educación debe cultivar, no imponer desde afuera.", work:"Mencio" },
+    { name:"Xunzi", birth:-310, death:-235, school:"chinese", tier:"minor", idea:"La naturaleza humana es mala; la virtud se cultiva con esfuerzo.", blurb:"Confuciano que invirtió el optimismo de Mencio: para él, los impulsos naturales llevan al conflicto si no se moldean activamente mediante el ritual, la educación y las normas sociales.", work:"Xunzi" },
+    { name:"Han Feizi", birth:-280, death:-233, school:"chinese", tier:"minor", idea:"El gobernante debe regir con leyes estrictas, no con virtud.", blurb:"Sistematizó el legismo: sostuvo que confiar en la virtud personal de los gobernantes es ingenuo, y que solo leyes claras, premios y castigos consistentes pueden ordenar un Estado. Sus ideas guiaron la unificación de China bajo la dinastía Qin.", work:"Han Feizi" },
+    { name:"Zhu Xi", birth:1130, death:1200, school:"chinese", tier:"major", idea:"Investigar las cosas revela los principios universales que las gobiernan.", blurb:"Sintetizó siglos de comentarios confucianos en el neoconfucianismo, la ortodoxia filosófica que dominó los exámenes imperiales chinos durante setecientos años. Sostuvo que todo ente participa de un principio (li) universal accesible mediante el estudio disciplinado.", work:"Comentarios a los Cuatro Libros" },
+    { name:"Wang Yangming", birth:1472, death:1529, school:"chinese", tier:"minor", idea:"Conocer y actuar son una sola cosa.", blurb:"Frente al estudio externo de las cosas que proponía Zhu Xi, sostuvo que el conocimiento moral (liangzhi) ya está presente en la mente de cada persona, y que un conocimiento genuino se manifiesta inevitablemente en la acción.", work:"Instrucciones para la vida práctica" },
+    { name:"Li Zehou", birth:1930, death:2021, school:"chinese", tier:"minor", idea:"La razón se sedimenta en la sensibilidad a través de la historia y la cultura.", blurb:"Uno de los filósofos chinos más influyentes del siglo XX: propuso que la ética y la estética no son universales abstractos sino que se forman históricamente, capa sobre capa, en la psicología colectiva de un pueblo —una idea que aplicó tanto a Kant como a la tradición confuciana.", work:"El camino de la belleza" }
   ];
 
   /* Try to load fresh data from a sibling JSON file (same origin, deployed on
@@ -793,18 +799,7 @@
     core.style.opacity = "1";
     svg.appendChild(core);
 
-    var flow = document.createElementNS(svgNS, "path");
-    flow.setAttribute("d", d);
-    flow.setAttribute("fill", "none");
-    flow.setAttribute("stroke", "var(--parchment)");
-    flow.setAttribute("stroke-width", "3.2");
-    flow.setAttribute("stroke-linecap", "round");
-    flow.setAttribute("class", "ribbon-flow");
-    flow.style.opacity = "0.85";
-    flow.style.animationDelay = (sIdx * -0.4) + "s";
-    svg.appendChild(flow);
-
-    ribbonEls[s.key] = [wide, core, outline, flow];
+    ribbonEls[s.key] = [wide, core, outline];
 
     /* school label near the start of its ribbon */
     var startPt = polarToXY(angleFor(range.from), radiusFor(range.from, s.key));
@@ -908,11 +903,10 @@
     var allActive = activeSchools.size === SCHOOLS.length;
     SCHOOLS.forEach(function(s){
       var on = activeSchools.has(s.key);
-      var op = allActive ? [0.58, 1, 0.4, 0.85] : (on ? [0.75, 1, 0.5, 1] : [0.03, 0.05, 0.02, 0]);
+      var op = allActive ? [0.58, 1, 0.4] : (on ? [0.75, 1, 0.5] : [0.03, 0.05, 0.02]);
       ribbonEls[s.key][0].style.opacity = op[0];
       ribbonEls[s.key][1].style.opacity = op[1];
       ribbonEls[s.key][2].style.opacity = op[2];
-      ribbonEls[s.key][3].style.opacity = op[3];
     });
     nodeEls.forEach(function(n){
       var on = activeSchools.has(n.school);
