@@ -205,6 +205,19 @@
   .node.minor .label{ opacity: 0; transition: opacity .15s ease; }
   .node.minor:hover .label, .node.minor:focus-visible .label, .node.minor.show-label .label{ opacity: 1; }
   .node.major .label{ color: var(--parchment); }
+  .node .node-date{
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--gold);
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 0 6px var(--bg), 0 0 6px var(--bg), 0 0 6px var(--bg);
+    opacity: 0;
+  }
+  #world.show-dates .node.major .node-date{ opacity: 0.9; transition: opacity .2s ease; }
+  #world.show-dates .node.minor:hover .node-date,
+  #world.show-dates .node.minor:focus-visible .node-date,
+  #world.show-dates .node.minor.show-label .node-date{ opacity: 0.9; transition: opacity .2s ease; }
   .node:focus-visible{ outline: none; }
   .node:focus-visible .marker{ outline: 2px solid var(--gold); outline-offset: 3px; }
   .node.dim{ opacity: 0.1; pointer-events: none; }
@@ -220,7 +233,9 @@
     opacity: 0.55;
     white-space: nowrap;
     pointer-events: none;
+    transition: opacity .25s ease;
   }
+  .school-tag{ opacity: 0.9; font-weight: 600; }
   .tick-label{
     position:absolute;
     font-family: var(--font-mono);
@@ -327,6 +342,7 @@
 
   /* smooth camera motion, used only while the guided tour is active */
   .spiral-world.touring{ transition: transform 1.05s cubic-bezier(.4,0,.2,1); }
+  .spiral-world.zooming{ transition: transform .28s ease; }
 
   .tour-btn{
     font-family: var(--font-mono);
@@ -423,7 +439,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .panel, .node .marker, .chip{ transition: none !important; }
-    .spiral-world.touring{ transition: none; }
+    .spiral-world.touring, .spiral-world.zooming{ transition: none; }
   }
 
   @media (max-width: 640px){
@@ -761,6 +777,7 @@
 
   /* school ribbons: thick translucent stroke + thin bright core, following the spiral */
   var ribbonEls = {};
+  var schoolLabelEls = [];
   SCHOOLS.forEach(function(s, sIdx){
     var range = schoolRange[s.key];
     var steps = Math.max(6, Math.round((range.to - range.from) / 15));
@@ -774,7 +791,7 @@
     outline.setAttribute("d", d);
     outline.setAttribute("fill", "none");
     outline.setAttribute("stroke", "#000000");
-    outline.setAttribute("stroke-width", "20");
+    outline.setAttribute("stroke-width", "11");
     outline.setAttribute("stroke-linecap", "round");
     outline.setAttribute("stroke-linejoin", "round");
     outline.style.opacity = "0.4";
@@ -784,36 +801,38 @@
     wide.setAttribute("d", d);
     wide.setAttribute("fill", "none");
     wide.setAttribute("stroke", s.color);
-    wide.setAttribute("stroke-width", "15");
+    wide.setAttribute("stroke-width", "7");
     wide.setAttribute("stroke-linecap", "round");
     wide.setAttribute("stroke-linejoin", "round");
-    wide.style.opacity = "0.58";
+    wide.style.opacity = "0.68";
     svg.appendChild(wide);
 
     var core = document.createElementNS(svgNS, "path");
     core.setAttribute("d", d);
     core.setAttribute("fill", "none");
     core.setAttribute("stroke", s.color);
-    core.setAttribute("stroke-width", "3");
+    core.setAttribute("stroke-width", "2.2");
     core.setAttribute("stroke-linecap", "round");
     core.style.opacity = "1";
     svg.appendChild(core);
 
     ribbonEls[s.key] = [wide, core, outline];
 
-    /* school label near the start of its ribbon */
+    /* school label near the start of its ribbon — visible when zoomed out for
+       orientation, fades away on close zoom so it doesn't fight with node labels */
     var startPt = polarToXY(angleFor(range.from), radiusFor(range.from, s.key));
     var labelEl = document.createElement("div");
-    labelEl.className = "era-tag";
+    labelEl.className = "era-tag school-tag";
     labelEl.style.color = s.color;
-    labelEl.style.opacity = "0.9";
     labelEl.style.left = (cx + startPt.x) + "px";
     labelEl.style.top = (cy + startPt.y - 16) + "px";
     labelEl.textContent = s.label;
     world.appendChild(labelEl);
+    schoolLabelEls.push(labelEl);
   });
 
-  /* center hub + "hoy" marker */
+  /* center hub + "hoy" marker (no separate centered date text — it collided
+     with the earliest nodes once more traditions started near the same point) */
   (function hubAndToday(){
     var hub = document.createElementNS(svgNS, "circle");
     hub.setAttribute("cx", cx); hub.setAttribute("cy", cy); hub.setAttribute("r", INNER_R - 14);
@@ -831,15 +850,6 @@
     todayTag.style.top = (cy + todayPt.y - 18) + "px";
     world.appendChild(todayTag);
   })();
-
-  var hubLabel = document.createElement("div");
-  hubLabel.className = "era-tag";
-  hubLabel.style.left = cx + "px";
-  hubLabel.style.top = cy + "px";
-  hubLabel.style.transform = "translate(-50%,-50%)";
-  hubLabel.style.opacity = "0.7";
-  hubLabel.innerHTML = "600 a.C.";
-  world.appendChild(hubLabel);
 
   /* ===================== NODES ===================== */
 
@@ -866,10 +876,14 @@
     label.className = "label";
     label.textContent = p.name;
     btn.appendChild(label);
+    var dateEl = document.createElement("span");
+    dateEl.className = "node-date";
+    dateEl.textContent = fmtRange(p);
+    btn.appendChild(dateEl);
 
     btn.addEventListener("click", function(){ openPanel(p, school); });
     world.appendChild(btn);
-    nodeEls.push({ el: btn, person: p, school: p.school, x: x, y: y });
+    nodeEls.push({ el: btn, person: p, school: p.school, x: x, y: y, dateEl: dateEl });
   });
 
   /* ===================== CHIPS / FILTER ===================== */
@@ -903,7 +917,7 @@
     var allActive = activeSchools.size === SCHOOLS.length;
     SCHOOLS.forEach(function(s){
       var on = activeSchools.has(s.key);
-      var op = allActive ? [0.58, 1, 0.4] : (on ? [0.75, 1, 0.5] : [0.03, 0.05, 0.02]);
+      var op = allActive ? [0.68, 1, 0.35] : (on ? [0.85, 1, 0.45] : [0.03, 0.05, 0.02]);
       ribbonEls[s.key][0].style.opacity = op[0];
       ribbonEls[s.key][1].style.opacity = op[1];
       ribbonEls[s.key][2].style.opacity = op[2];
@@ -1018,15 +1032,27 @@
     updateLOD();
   }
 
-  var lodShown = null;
+  var lodTickShown = null, lodDatesShown = null, lodSchoolShown = null;
   function updateLOD(){
-    var show = view.scale > 0.55;
-    if (show === lodShown) return;
-    lodShown = show;
-    tickEls.forEach(function(t){
-      t.mark.style.opacity = show ? "0.4" : "0";
-      t.label.style.opacity = show ? "0.92" : "0";
-    });
+    var showTicks = view.scale > 0.55;
+    var showDates = view.scale > 1.15;
+    var showSchool = view.scale < 1.3;
+
+    if (showTicks !== lodTickShown){
+      lodTickShown = showTicks;
+      tickEls.forEach(function(t){
+        t.mark.style.opacity = showTicks ? "0.4" : "0";
+        t.label.style.opacity = showTicks ? "0.92" : "0";
+      });
+    }
+    if (showDates !== lodDatesShown){
+      lodDatesShown = showDates;
+      world.classList.toggle("show-dates", showDates);
+    }
+    if (showSchool !== lodSchoolShown){
+      lodSchoolShown = showSchool;
+      schoolLabelEls.forEach(function(el){ el.style.opacity = showSchool ? "0.9" : "0.15"; });
+    }
   }
 
   function fitToView(){
@@ -1108,8 +1134,14 @@
     zoomBy(factor, e.clientX - rect.left, e.clientY - rect.top);
   }, { passive: false });
 
-  document.getElementById("zoomIn").addEventListener("click", function(){ zoomBy(1.25); });
-  document.getElementById("zoomOut").addEventListener("click", function(){ zoomBy(0.8); });
+  function smoothZoom(factor){
+    world.classList.add("zooming");
+    zoomBy(factor);
+    clearTimeout(smoothZoom._t);
+    smoothZoom._t = setTimeout(function(){ world.classList.remove("zooming"); }, 300);
+  }
+  document.getElementById("zoomIn").addEventListener("click", function(){ smoothZoom(1.35); });
+  document.getElementById("zoomOut").addEventListener("click", function(){ smoothZoom(0.74); });
   document.getElementById("zoomReset").addEventListener("click", fitToView);
 
   window.addEventListener("resize", fitToView);
