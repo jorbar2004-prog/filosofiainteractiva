@@ -54,6 +54,11 @@
       "key": "contemporary",
       "label": "Contemporánea",
       "color": "var(--c-contemporary)"
+    },
+    {
+      "key": "chinese",
+      "label": "Filosofía china",
+      "color": "var(--c-chinese)"
     }
   ],
   "people": [
@@ -626,6 +631,106 @@
       "idea": "El decrecimiento, no el crecimiento verde, puede salvar el planeta.",
       "blurb": "Rescató cuadernos tardíos e inéditos de Marx sobre ecología para argumentar que el capitalismo es estructuralmente incompatible con frenar el cambio climático. Propone el 'decrecimiento comunista': reducir la producción y organizar lo esencial —transporte, salud, educación— como bienes comunes gratuitos en vez de mercancías.",
       "work": "El capital en el Antropoceno"
+    },
+    {
+      "name": "Confucio",
+      "birth": -551,
+      "death": -479,
+      "school": "chinese",
+      "tier": "major",
+      "idea": "El orden social nace de la virtud personal y el ritual.",
+      "blurb": "Maestro itinerante cuyas enseñanzas sobre la piedad filial, el ritual (li) y la benevolencia (ren) se convirtieron en la columna vertebral del pensamiento y la organización social de China durante más de dos mil años.",
+      "work": "Analectas (recopiladas por sus discípulos)"
+    },
+    {
+      "name": "Laozi",
+      "birth": -571,
+      "death": -471,
+      "school": "chinese",
+      "tier": "major",
+      "idea": "El Tao que puede nombrarse no es el Tao eterno.",
+      "blurb": "Figura semi-legendaria a quien se atribuye la fundación del taoísmo: propuso vivir en armonía con el Tao —el curso natural de las cosas— mediante la no-acción (wu wei) antes que mediante el control o la imposición.",
+      "work": "Dao De Jing"
+    },
+    {
+      "name": "Mozi",
+      "birth": -470,
+      "death": -391,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "Amor universal e imparcial, sin jerarquías de afecto.",
+      "blurb": "Fundó el moísmo como crítica directa al confucianismo: sostuvo que el amor filial jerárquico genera conflicto, y propuso un amor imparcial hacia todas las personas por igual, junto con una ética de utilidad social temprana.",
+      "work": "Mozi (compilación de su escuela)"
+    },
+    {
+      "name": "Zhuangzi",
+      "birth": -369,
+      "death": -286,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "¿Soy un hombre que soñó ser mariposa, o una mariposa que sueña ser hombre?",
+      "blurb": "Llevó el taoísmo hacia el escepticismo y la relatividad de todo punto de vista fijo, con una prosa llena de parábolas que cuestionan la distinción entre sueño y vigilia, entre lo útil y lo inútil.",
+      "work": "Zhuangzi"
+    },
+    {
+      "name": "Mencio",
+      "birth": -372,
+      "death": -289,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "La naturaleza humana es intrínsecamente buena.",
+      "blurb": "Principal continuador de Confucio, sostuvo que todo ser humano nace con brotes morales innatos —compasión, vergüenza, cortesía, sentido de lo correcto— que la educación debe cultivar, no imponer desde afuera.",
+      "work": "Mencio"
+    },
+    {
+      "name": "Xunzi",
+      "birth": -310,
+      "death": -235,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "La naturaleza humana es mala; la virtud se cultiva con esfuerzo.",
+      "blurb": "Confuciano que invirtió el optimismo de Mencio: para él, los impulsos naturales llevan al conflicto si no se moldean activamente mediante el ritual, la educación y las normas sociales.",
+      "work": "Xunzi"
+    },
+    {
+      "name": "Han Feizi",
+      "birth": -280,
+      "death": -233,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "El gobernante debe regir con leyes estrictas, no con virtud.",
+      "blurb": "Sistematizó el legismo: sostuvo que confiar en la virtud personal de los gobernantes es ingenuo, y que solo leyes claras, premios y castigos consistentes pueden ordenar un Estado. Sus ideas guiaron la unificación de China bajo la dinastía Qin.",
+      "work": "Han Feizi"
+    },
+    {
+      "name": "Zhu Xi",
+      "birth": 1130,
+      "death": 1200,
+      "school": "chinese",
+      "tier": "major",
+      "idea": "Investigar las cosas revela los principios universales que las gobiernan.",
+      "blurb": "Sintetizó siglos de comentarios confucianos en el neoconfucianismo, la ortodoxia filosófica que dominó los exámenes imperiales chinos durante setecientos años. Sostuvo que todo ente participa de un principio (li) universal accesible mediante el estudio disciplinado.",
+      "work": "Comentarios a los Cuatro Libros"
+    },
+    {
+      "name": "Wang Yangming",
+      "birth": 1472,
+      "death": 1529,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "Conocer y actuar son una sola cosa.",
+      "blurb": "Frente al estudio externo de las cosas que proponía Zhu Xi, sostuvo que el conocimiento moral (liangzhi) ya está presente en la mente de cada persona, y que un conocimiento genuino se manifiesta inevitablemente en la acción.",
+      "work": "Instrucciones para la vida práctica"
+    },
+    {
+      "name": "Li Zehou",
+      "birth": 1930,
+      "death": 2021,
+      "school": "chinese",
+      "tier": "minor",
+      "idea": "La razón se sedimenta en la sensibilidad a través de la historia y la cultura.",
+      "blurb": "Uno de los filósofos chinos más influyentes del siglo XX: propuso que la ética y la estética no son universales abstractos sino que se forman históricamente, capa sobre capa, en la psicología colectiva de un pueblo —una idea que aplicó tanto a Kant como a la tradición confuciana.",
+      "work": "El camino de la belleza"
     }
   ]
 }
